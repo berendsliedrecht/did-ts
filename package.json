@@ -1,0 +1,17 @@
+{
+  "name": "did-core",
+  "version": "0.1.0",
+  "description": "Implementation of did-core v1.0",
+  "license": "MIT",
+  "author": "Berend Sliedrecht <blu3beri@proton.me>",
+  "main": "build/index.js",
+  "scripts": {
+    "test": "ts-node ./tests/*.test.ts",
+    "dev": "ts-node src/index.ts"
+  },
+  "devDependencies": {
+    "@types/node": "18.16.16",
+    "ts-node": "^10.9.1",
+    "typescript": "~5.0.4"
+  }
+}
