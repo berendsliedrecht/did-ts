@@ -1,6 +1,15 @@
 const PREFIX_PATH = '/'
 const PREFIX_QUERY = '?'
 const PREFIX_FRAGMENT = '#'
+const DID_URL_REGEXP =
+  /^did:[a-z0-9]+(?::[a-z0-9]+(?:[._-][a-z0-9]+)*)*:(?:[a-z0-9]+(?:[._-][a-z0-9]+)*)?(?:\/[^?\s]*)?(?:\?[^#\s]*)?(?:#[^\s]*)?$/i
+
+export type DidParts = {
+  scheme: string
+  method: string
+  namespaces?: Array<string>
+  identifier: string
+}
 
 export class Did {
   public did: string
@@ -13,9 +22,11 @@ export class Did {
     const prefixPathIndex = url.pathname.indexOf(PREFIX_PATH)
 
     const stripUntil = Math.min(
-      did.indexOf(PREFIX_PATH),
-      did.indexOf(PREFIX_QUERY),
-      did.indexOf(PREFIX_FRAGMENT)
+      ...[
+        did.indexOf(PREFIX_PATH),
+        did.indexOf(PREFIX_QUERY),
+        did.indexOf(PREFIX_FRAGMENT),
+      ].filter((i) => i !== -1)
     )
 
     this.did = stripUntil !== -1 ? did.slice(0, stripUntil) : did
@@ -30,10 +41,7 @@ export class Did {
   }
 
   public static validate(did: string): boolean {
-    const didUrlRegexp =
-      /^did:[a-z0-9]+(?::[a-z0-9]+(?:[._-][a-z0-9]+)*)*:(?:[a-z0-9]+(?:[._-][a-z0-9]+)*)?(?:\/[^?\s]*)?(?:\?[^#\s]*)?(?:#[^\s]*)?$/i
-
-    return didUrlRegexp.test(did)
+    return DID_URL_REGEXP.test(did)
   }
 
   public validate(): boolean {
@@ -70,6 +78,21 @@ export class Did {
     this.fragment = strippedFragment
 
     return this
+  }
+
+  public get didParts(): DidParts {
+    const parts = this.did.split(':')
+    const scheme = parts[0]
+    const method = parts[1]
+    const identifier = parts[parts.length - 1]
+    const namespaces = parts.slice(2, parts.length - 1)
+
+    return {
+      scheme,
+      method,
+      identifier,
+      namespaces: namespaces.length > 0 ? namespaces : undefined,
+    }
   }
 
   private stripOptionalPrefix(s: string, p: string): string {
