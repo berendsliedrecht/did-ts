@@ -3,7 +3,11 @@ import { Did } from '../src'
 import assert from 'node:assert'
 import { describe, it } from 'node:test'
 import { DIDS } from './fixtures/dids'
-import { createDidExtractPartsTest, createDidValidationTest } from './utils'
+import {
+  createDidExtractPartsTest,
+  createDidExtractUrlPartsTest,
+  createDidValidationTest,
+} from './utils'
 
 describe('Did', (_) => {
   it('should create a new did', (_) => {
@@ -19,7 +23,13 @@ describe('Did', (_) => {
 
   describe('should extract correct parts from did', (_) => {
     Object.entries(DIDS).forEach(([did, expected]) =>
-      createDidExtractPartsTest(did, expected)
+      createDidExtractPartsTest(did, expected.parts)
+    )
+  })
+
+  describe('should extract correct url parts from did', (_) => {
+    Object.entries(DIDS).forEach(([did, expected]) =>
+      createDidExtractUrlPartsTest(did, expected.urlParts)
     )
   })
 

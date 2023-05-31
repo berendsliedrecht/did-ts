@@ -11,11 +11,17 @@ export type DidParts = {
   identifier: string
 }
 
+export type DidUrlParts = {
+  path?: string
+  query?: Record<string, string>
+  fragment?: string
+}
+
 export class Did {
   public did: string
-  public path: string
-  public query: string
-  public fragment: string
+  public path?: string
+  public query?: string
+  public fragment?: string
 
   public constructor(did: string) {
     const url = new URL(did)
@@ -31,13 +37,16 @@ export class Did {
 
     this.did = stripUntil !== -1 ? did.slice(0, stripUntil) : did
 
-    this.path = (
+    const path = (
       prefixPathIndex !== -1 ? url.pathname.slice(prefixPathIndex) : ''
     ).substring(1)
+    this.path = path.length > 0 ? path : undefined
 
-    this.query = url.search.substring(1)
+    const query = url.search.substring(1)
+    this.query = query.length > 0 ? query : undefined
 
-    this.fragment = url.hash.substring(1)
+    const fragment = url.hash.substring(1)
+    this.fragment = fragment.length > 0 ? fragment : undefined
   }
 
   public static validate(did: string): boolean {
@@ -92,6 +101,21 @@ export class Did {
       method,
       identifier,
       namespaces: namespaces.length > 0 ? namespaces : undefined,
+    }
+  }
+
+  public get didUrlParts(): DidUrlParts {
+    const query = new URLSearchParams(this.query)
+    return {
+      path: this.path,
+      query:
+        query.size > 0
+          ? [...query.entries()].reduce(
+              (prev, [k, v]) => ({ [k]: v, ...prev } as Record<string, string>),
+              {}
+            )
+          : undefined,
+      fragment: this.fragment,
     }
   }
 
