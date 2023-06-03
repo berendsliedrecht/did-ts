@@ -6,6 +6,7 @@ import { DIDS } from './fixtures/dids'
 import {
   createDidExtractPartsTest,
   createDidExtractUrlPartsTest,
+  createDidIsDidUrlValidationTest,
   createDidValidationTest,
 } from './utils'
 
@@ -24,22 +25,52 @@ describe('Did', (_) => {
 
       assert.deepStrictEqual(did.toUrl(), didUrl)
     })
+
+    it('should create a new did via the builder pattern', () => {
+      const did = new Did('did:key:abc')
+        .withPath('some-path')
+        .withQuery({ versionId: '1' })
+        .withFragment('key-1')
+
+      assert.deepStrictEqual(
+        did.toUrl(),
+        'did:key:abc/some-path?versionId=1#key-1'
+      )
+    })
   })
 
   describe('Validation', () => {
-    Object.keys(DIDS).forEach(createDidValidationTest)
+    describe('Validate did', () => {
+      Object.keys(DIDS).forEach(createDidValidationTest)
+    })
+
+    describe('Validate whether did is url', () => {
+      Object.entries(DIDS).forEach(([did, expected]) =>
+        createDidIsDidUrlValidationTest(
+          did,
+          Boolean(
+            expected.urlParts.path ||
+              expected.urlParts.query ||
+              expected.urlParts.fragment ||
+              expected.urlParts.parameters
+          )
+        )
+      )
+    })
   })
 
-  describe('Extract did parts', () => {
-    Object.entries(DIDS).forEach(([did, expected]) =>
-      createDidExtractPartsTest(did, expected.parts)
-    )
-  })
+  describe('Extraction', () => {
+    describe('Extract did parts', () => {
+      Object.entries(DIDS).forEach(([did, expected]) =>
+        createDidExtractPartsTest(did, expected.parts)
+      )
+    })
 
-  describe('Extract did url parts', () => {
-    Object.entries(DIDS).forEach(([did, expected]) =>
-      createDidExtractUrlPartsTest(did, expected.urlParts)
-    )
+    describe('Extract did url parts', () => {
+      Object.entries(DIDS).forEach(([did, expected]) =>
+        createDidExtractUrlPartsTest(did, expected.urlParts)
+      )
+    })
   })
 
   describe('Modify url parts', () => {
