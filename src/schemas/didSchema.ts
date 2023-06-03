@@ -1,5 +1,5 @@
 import { DidError } from '../error'
-import { Did, PREFIX_FRAGMENT, PREFIX_PATH, PREFIX_QUERY } from '../did'
+import { Did } from '../did'
 import { z } from 'zod'
 
 const DID_URL_REGEXP =
@@ -7,82 +7,27 @@ const DID_URL_REGEXP =
 const DID_REGEXP =
   /^did:[a-z0-9]+(?::[a-z0-9]+(?:[._-][a-z0-9]+)*)*(?:#[^s]*)?$/i
 
-export const didUrlSchema = (parameterKeys?: Array<string>) =>
-  z
-    .string()
-    .regex(DID_URL_REGEXP)
-    .transform((did: string) => {
-      const url = new URL(did)
-      const prefixPathIndex = url.pathname.indexOf(PREFIX_PATH)
-
-      const stripUntil = Math.min(
-        ...[
-          did.indexOf(PREFIX_PATH),
-          did.indexOf(PREFIX_QUERY),
-          did.indexOf(PREFIX_FRAGMENT),
-        ].filter((i) => i !== -1)
-      )
-
-      const didBase = stripUntil !== -1 ? did.slice(0, stripUntil) : did
-
-      const path = (
-        prefixPathIndex !== -1 ? url.pathname.slice(prefixPathIndex) : ''
-      ).substring(1)
-      const p = path.length > 0 ? path : undefined
-
-      const query = url.search.substring(1)
-      const queryParams = new URLSearchParams(query)
-      const queryObj =
-        queryParams.size > 0
-          ? [...queryParams.entries()].reduce(
-              (prev, [k, v]) => ({ [k]: v, ...prev } as Record<string, string>),
-              {}
-            )
-          : undefined
-
-      const parameters = queryObj
-        ? Object.entries(queryObj).reduce((prev, [k, v]) => {
-            if (parameterKeys?.includes(k)) {
-              return { [k]: v, ...prev }
-            }
-            return prev
-          }, {})
-        : undefined
-
-      const fragment = url.hash.substring(1)
-      const f = fragment.length > 0 ? fragment : undefined
-
-      return {
-        did: didBase,
-        path: p,
-        query: queryObj,
-        fragment: f,
-        parameters,
-      }
-    })
-
-export const didSchema = z
-  .string()
-  .regex(DID_REGEXP)
-  .transform((did: string) => {
-    const parts = did.split(':')
-    const scheme = parts[0]
-    const method = parts[1]
-    const identifier = parts[parts.length - 1]
-    const namespaces = parts.slice(2, parts.length - 1)
-
-    return {
-      scheme,
-      method,
-      identifier,
-      namespaces: namespaces.length > 0 ? namespaces : undefined,
+export const stringOrDid = z
+  .union([
+    z.string().regex(DID_REGEXP),
+    z.custom<Did>((did) => did instanceof Did),
+  ])
+  .transform((did: string | Did): Did => {
+    if (typeof did === 'string') {
+      return new Did(did)
+    } else if (did instanceof Did) {
+      return did
+    } else {
+      throw new DidError(`id must be of type 'string' or an instance of 'Did'`)
     }
   })
 
-export const stringOrDid = z
-  .string()
-  .or(z.custom<Did>((did) => did instanceof Did))
-  .transform((did) => {
+export const stringOrDidUrl = z
+  .union([
+    z.string().regex(DID_URL_REGEXP),
+    z.custom<Did>((did) => did instanceof Did),
+  ])
+  .transform((did: string | Did): Did => {
     if (typeof did === 'string') {
       return new Did(did)
     } else if (did instanceof Did) {

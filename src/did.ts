@@ -1,4 +1,5 @@
-import { didSchema, didUrlSchema } from './schemas'
+import { z } from 'zod'
+import { stringOrDid, stringOrDidUrl } from './schemas'
 
 export const PREFIX_PATH = '/'
 export const PREFIX_QUERY = '?'
@@ -30,31 +31,66 @@ export class Did {
   private path?: string
   private query?: Record<string, string>
   private fragment?: string
-  private parameterKeys: Array<string> = DEFAULT_PARAMETER_KEYS
+  private parameters?: Record<string, string>
+  private parameterKeys: Array<string>
 
-  public constructor(did: string) {
-    const {
-      did: didBase,
-      fragment,
-      path,
-      query,
-    } = didUrlSchema(this.parameterKeys).parse(did)
+  public constructor(did: string, parameterKeys?: Array<string>) {
+    const url = new URL(did)
+    const prefixPathIndex = url.pathname.indexOf(PREFIX_PATH)
+
+    const stripUntil = Math.min(
+      ...[
+        did.indexOf(PREFIX_PATH),
+        did.indexOf(PREFIX_QUERY),
+        did.indexOf(PREFIX_FRAGMENT),
+      ].filter((i) => i !== -1)
+    )
+
+    const didBase = stripUntil !== -1 ? did.slice(0, stripUntil) : did
+
+    const path = (
+      prefixPathIndex !== -1 ? url.pathname.slice(prefixPathIndex) : ''
+    ).substring(1)
+
+    const query = url.search.substring(1)
+    const queryParams = new URLSearchParams(query)
+
+    const fragment = url.hash.substring(1)
+
+    this.parameterKeys = parameterKeys
+      ? [...DEFAULT_PARAMETER_KEYS, ...parameterKeys]
+      : DEFAULT_PARAMETER_KEYS
     this.did = didBase
-    this.path = path
-    this.query = query
-    this.fragment = fragment
+    this.path = path.length > 0 ? path : undefined
+    this.query =
+      queryParams.size > 0
+        ? [...queryParams.entries()].reduce(
+            (prev, [k, v]) => ({ [k]: v, ...prev } as Record<string, string>),
+            {}
+          )
+        : undefined
+    this.fragment = fragment.length > 0 ? fragment : undefined
+
+    this.parameters = this.query
+      ? Object.entries(this.query).reduce((prev, [k, v]) => {
+          if (this.parameterKeys?.includes(k)) {
+            return { [k]: v, ...prev }
+          }
+          return prev
+        }, {})
+      : undefined
   }
 
   public isDidUrl(): boolean {
     return Boolean(this.path || this.query || this.fragment)
   }
 
-  public static validateDid(did: string): boolean {
-    return didSchema.safeParse(did).success
+  public static validateDid(did: z.input<typeof stringOrDid>): boolean {
+    return stringOrDid.safeParse(did).success
   }
 
-  public static validateDidUrl(did: string): boolean {
-    return didUrlSchema().safeParse(did).success
+  public static validateDidUrl(did: z.input<typeof stringOrDidUrl>): boolean {
+    return stringOrDidUrl.safeParse(did).success
   }
 
   public validate(): boolean {
@@ -123,19 +159,29 @@ export class Did {
   }
 
   public get didParts(): DidParts {
-    return didSchema.parse(this.did)
+    const parts = this.did.split(':')
+    const scheme = parts[0]
+    const method = parts[1]
+    const identifier = parts[parts.length - 1]
+    const namespaces = parts.slice(2, parts.length - 1)
+
+    return {
+      scheme,
+      method,
+      identifier,
+      namespaces: namespaces.length > 0 ? namespaces : undefined,
+    }
   }
 
   public get didUrlParts(): DidUrlParts {
-    const { fragment, path, query, parameters } = didUrlSchema(
-      this.parameterKeys
-    ).parse(this.toUrl())
+    // This is done because the params are calculated based on the query and parameterKeys, but is you set additional parameter keys later on the new parameter field is not updated
+    const newDid = new Did(this.toUrl())
 
     return {
-      fragment,
-      path,
-      query,
-      parameters,
+      fragment: newDid.fragment,
+      path: newDid.path,
+      query: newDid.query,
+      parameters: newDid.parameters,
     }
   }
 
@@ -161,5 +207,13 @@ export class Did {
     }
 
     return this
+  }
+
+  public toString() {
+    return this.toUrl()
+  }
+
+  public toJSON() {
+    return this.toString()
   }
 }

@@ -11,7 +11,7 @@ export class VerificationMethod {
   publicKeyJwk?: PublicKeyJwk
   publicKeyMultibase?: publicKeyMultibase
 
-  public constructor(options: z.infer<typeof verificationMethodSchema>) {
+  public constructor(options: z.input<typeof verificationMethodSchema>) {
     const { id, controller, type, publicKeyJwk, publicKeyMultibase } =
       verificationMethodSchema.parse(options)
 
