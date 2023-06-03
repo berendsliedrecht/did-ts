@@ -1,9 +1,24 @@
 import { z } from 'zod'
 import { Did } from './did'
-import { ServiceEndpoint } from './serviceEndpoint'
-import { VerificationMethod } from './verificationMethod'
+import { ServiceEndpoint, ServiceEndpointOptions } from './serviceEndpoint'
+import {
+  VerificationMethod,
+  VerificationMethodOptions,
+} from './verificationMethod'
 import { didDocumentSchema, stringOrDid } from './schemas'
 import { DidDocumentError } from './error'
+
+type StringOrVerificationMethodArray = Array<string | VerificationMethodOptions>
+
+export type DidDocumentOptions = z.input<typeof didDocumentSchema> & {
+  verificationMethod?: Array<VerificationMethodOptions>
+  authentication?: StringOrVerificationMethodArray
+  assertionMethod?: StringOrVerificationMethodArray
+  keyAgreement?: StringOrVerificationMethodArray
+  capabilityInvocation?: StringOrVerificationMethodArray
+  capabilityDelegation?: StringOrVerificationMethodArray
+  service?: Array<ServiceEndpointOptions>
+} & Record<string, unknown>
 
 export class DidDocument {
   public id: Did
@@ -17,7 +32,7 @@ export class DidDocument {
   public capabilityDelegation?: Array<VerificationMethod | string>
   public service?: Array<ServiceEndpoint>
 
-  public constructor(options: z.input<typeof didDocumentSchema>) {
+  public constructor(options: DidDocumentOptions) {
     const {
       id,
       service,

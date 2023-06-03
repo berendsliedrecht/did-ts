@@ -1,8 +1,20 @@
 import { verificationMethodSchema } from './schemas'
 import { Did } from './did'
 import { z } from 'zod'
-import { PublicKeyJwk } from './publicKeyJwk'
-import { publicKeyMultibase } from './publicKeyMultibase'
+import { PublicKeyJwk, PublicKeyJwkOptions } from './publicKeyJwk'
+import {
+  PublicKeyMultibaseOptions,
+  publicKeyMultibase,
+} from './publicKeyMultibase'
+
+export type VerificationMethodOptions = z.input<
+  typeof verificationMethodSchema
+> & {
+  publicKeyJwk?: PublicKeyJwkOptions
+  publicKeyMultibase?: PublicKeyMultibaseOptions
+} & Record<string, unknown>
+
+const x: VerificationMethodOptions = { id: 'a', controller: 'b', type: 'a',publicKeyBase58: 'he' }
 
 export class VerificationMethod {
   id: Did
@@ -11,7 +23,7 @@ export class VerificationMethod {
   publicKeyJwk?: PublicKeyJwk
   publicKeyMultibase?: publicKeyMultibase
 
-  public constructor(options: z.input<typeof verificationMethodSchema>) {
+  public constructor(options: VerificationMethodOptions) {
     const { id, controller, type, publicKeyJwk, publicKeyMultibase } =
       verificationMethodSchema.parse(options)
 

@@ -5,8 +5,6 @@ import {
   verificationMethodSchema,
 } from './verificationMethodSchema'
 import { serviceSchema } from './serviceSchema'
-import { ServiceEndpoint } from '../serviceEndpoint'
-import { Did } from '../did'
 
 export const didDocumentSchema = z.object({
   id: stringOrDid,
@@ -18,9 +16,16 @@ export const didDocumentSchema = z.object({
   keyAgreement: z.optional(z.array(stringOrVerificationMethod)),
   capabilityInvocation: z.optional(z.array(stringOrVerificationMethod)),
   capabilityDelegation: z.optional(z.array(stringOrVerificationMethod)),
-  service: z.optional(z.array(serviceSchema)),
+  service: z.optional(
+    z.array(serviceSchema).refine((services) => {
+      const idSet = new Set()
+      for (const obj of services) {
+        if (idSet.has(obj.id)) {
+          return false
+        }
+        idSet.add(obj.id)
+      }
+      return true
+    }, 'Duplicate service.id found. They must be unique')
+  ),
 })
-// .transform((document) => ({
-//   ...document,
-//   service: document.service?.map((s) => new ServiceEndpoint(s)),
-// }))

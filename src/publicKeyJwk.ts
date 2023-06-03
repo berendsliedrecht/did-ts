@@ -1,10 +1,13 @@
 import { publicKeyJwkSchema } from './schemas'
 import { z } from 'zod'
 
-export class PublicKeyJwk {
-  public properties: z.infer<typeof publicKeyJwkSchema>
+export type PublicKeyJwkOptions = z.input<typeof publicKeyJwkSchema> &
+  Record<string, unknown>
 
-  public constructor(options: z.input<typeof publicKeyJwkSchema>) {
+export class PublicKeyJwk {
+  public properties: PublicKeyJwkOptions
+
+  public constructor(options: PublicKeyJwkOptions) {
     const properties = publicKeyJwkSchema.parse(options)
     this.properties = properties
   }
