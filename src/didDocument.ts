@@ -1,7 +1,7 @@
-import { Did } from 'did'
-import { DidDocumentError } from 'error'
-import { ServiceEndpoint } from 'serviceEndpoint'
-import { VerificationMethod } from 'verificationMethod'
+import { Did } from './did'
+import { DidDocumentError } from './error'
+import { ServiceEndpoint } from './serviceEndpoint'
+import { VerificationMethod } from './verificationMethod'
 
 export type DidDocumentOptions = {
   id: Did

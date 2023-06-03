@@ -10,52 +10,112 @@ import {
 } from './utils'
 
 describe('Did', (_) => {
-  it('should create a new did', (_) => {
-    const didUrl = 'did:key:abc'
-    const did = new Did(didUrl)
+  describe('Creation', () => {
+    it('should create a new did', () => {
+      const didUrl = 'did:key:abc'
+      const did = new Did(didUrl)
 
-    assert.strictEqual(did.did, didUrl)
+      assert.strictEqual(did.did, didUrl)
+    })
+
+    it('should create a new did from a did-url', () => {
+      const didUrl = 'did:key:abc/some-path?versionId=1#key-1'
+      const did = new Did(didUrl)
+
+      assert.deepStrictEqual(did.toUrl(), didUrl)
+    })
   })
 
-  describe('should validate dids', (_) => {
+  describe('Validation', () => {
     Object.keys(DIDS).forEach(createDidValidationTest)
   })
 
-  describe('should extract correct parts from did', (_) => {
+  describe('Extract did parts', () => {
     Object.entries(DIDS).forEach(([did, expected]) =>
       createDidExtractPartsTest(did, expected.parts)
     )
   })
 
-  describe('should extract correct url parts from did', (_) => {
+  describe('Extract did url parts', () => {
     Object.entries(DIDS).forEach(([did, expected]) =>
       createDidExtractUrlPartsTest(did, expected.urlParts)
     )
   })
 
-  it('should create a new did from a did-url', (_) => {
-    const didUrl = 'did:key:abc/some-path?versionId=1#key-1'
-    const did = new Did(didUrl)
+  describe('Modify url parts', () => {
+    const baseDid = 'did:key:abc'
+    describe('Path', () => {
+      it('should add a new path (withPath)', () => {
+        const did = new Did(baseDid)
+        did.withPath('test')
+        assert.strictEqual(did.didUrlParts.path, 'test')
+      })
 
-    assert.deepStrictEqual(did.toUrl(), didUrl)
-  })
+      it('should add a new path (addPath)', () => {
+        const did = new Did(baseDid)
+        did.addPath('test')
+        assert.strictEqual(did.didUrlParts.path, 'test')
+      })
 
-  it('should add a new parameter key', (_) => {
-    const didUrl = 'did:key:abc?some-key=test'
-    const did = new Did(didUrl)
-    did.addParameterKey('some-key')
+      it('should append a new path', () => {
+        const did = new Did(baseDid)
+        did.addPath('test').addPath('testTwo')
+        assert.strictEqual(did.didUrlParts.path, 'test/testTwo')
+      })
 
-    assert.deepStrictEqual(did.didUrlParts.parameters, { 'some-key': 'test' })
-  })
+      it('should remove the path', () => {
+        const did = new Did(baseDid)
+        did.addPath('test').removePath()
+        assert.strictEqual(did.didUrlParts.path, undefined)
+      })
+    })
 
-  it('should add a new parameter keys', (_) => {
-    const didUrl = 'did:key:abc?some-key=test&some-other-key=test-two'
-    const did = new Did(didUrl)
-    did.addParameterKey(['some-key', 'some-other-key'])
+    describe('Query', () => {
+      it('should add a new query (withQuery)', () => {
+        const did = new Did(baseDid)
+        did.withQuery({ a: 'b' })
+        assert.deepStrictEqual(did.didUrlParts.query, { a: 'b' })
+      })
 
-    assert.deepStrictEqual(did.didUrlParts.parameters, {
-      'some-key': 'test',
-      'some-other-key': 'test-two',
+      it('should add a new query (addQuery)', () => {
+        const did = new Did(baseDid)
+        did.addQuery({ a: 'b' })
+        assert.deepStrictEqual(did.didUrlParts.query, { a: 'b' })
+      })
+
+      it('should append a new query', () => {
+        const did = new Did(baseDid)
+        did.addQuery({ a: 'b' }).addQuery({ c: 'd' })
+        assert.deepStrictEqual(did.didUrlParts.query, { a: 'b', c: 'd' })
+      })
+
+      it('should remove the query', () => {
+        const did = new Did(baseDid)
+        did.addQuery({ a: 'b' }).removeQuery()
+        assert.strictEqual(did.didUrlParts.query, undefined)
+      })
+    })
+
+    describe('Fragment', () => {
+      it('should add a new fragment', () => {
+        const did = new Did(baseDid)
+        did.withFragment('a')
+        assert.strictEqual(did.didUrlParts.fragment, 'a')
+      })
+
+      it('should remove the fragment', () => {
+        const did = new Did(baseDid)
+        did.withFragment('a').removeFragment()
+        assert.strictEqual(did.didUrlParts.fragment, undefined)
+      })
+    })
+
+    describe('Parameters', () => {
+      it('should add a new parameter', () => {
+        const did = new Did(baseDid)
+        did.addParameterKey('a').addQuery({ a: 'b' })
+        assert.deepStrictEqual(did.didUrlParts.parameters, { a: 'b' })
+      })
     })
   })
 })

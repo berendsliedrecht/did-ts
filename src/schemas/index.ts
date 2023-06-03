@@ -1,0 +1,5 @@
+export * from './didSchema'
+export * from './didDocumentSchema'
+export * from './verificationMethodSchema'
+export * from './serviceSchema'
+export * from './publicKeyJwkSchema'

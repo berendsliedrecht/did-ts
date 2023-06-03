@@ -1,6 +1,6 @@
-import { Did } from 'did'
-import { VerificationMethodError } from 'error'
-import { Jwk } from 'jwk'
+import { Did } from './did'
+import { VerificationMethodError } from './error'
+import { Jwk } from './jwk'
 
 export type VerificationMethodOptions = {
   id: Did | string

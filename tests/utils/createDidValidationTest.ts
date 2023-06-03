@@ -4,6 +4,6 @@ import { Did } from '../../src'
 
 export const createDidValidationTest = (did: string) => {
   it(`should validate ${did}`, (_) => {
-    assert.strictEqual(Did.validate(did), true)
+    assert.strictEqual(Did.validateDidUrl(did), true)
   })
 }
