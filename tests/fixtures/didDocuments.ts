@@ -13,6 +13,7 @@ export const DID_DOCUMENTS: Array<DidDocumentOptions> = [
         controller: 'did:example:123',
         publicKeyJwk: {
           crv: 'Ed25519',
+          jsldkfalskd: 'asldhfsadj',
           x: 'VCpo2LMLhn6iWku8MKvSLg2ZAoC-nlOyPVQaO3FxVeQ',
           kty: 'OKP',
           kid: '_Qq0UL2Fq651Q0Fjd6TvnYE-faHiOpRlPVQcY_-tA4A',

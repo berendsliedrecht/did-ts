@@ -3,11 +3,12 @@ import { z } from 'zod'
 
 export type PublicKeyMultibaseOptions = z.input<typeof publicKeyMultibaseSchema>
 
-export class publicKeyMultibase {
-  public publicKeyMultibase: string
+export class PublicKeyMultibase {
+  public publicKeyMultibase: PublicKeyMultibaseOptions
+  public properties: PublicKeyMultibaseOptions
 
   public constructor(options: PublicKeyMultibaseOptions) {
-    const publicKeyMultibase = publicKeyMultibaseSchema.parse(options)
-    this.publicKeyMultibase = publicKeyMultibase
+    this.publicKeyMultibase = options
+    this.properties = publicKeyMultibaseSchema.parse(options)
   }
 }

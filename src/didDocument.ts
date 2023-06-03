@@ -1,26 +1,35 @@
 import { z } from 'zod'
 import { Did } from './did'
-import { ServiceEndpoint, ServiceEndpointOptions } from './serviceEndpoint'
+import { Service, ServiceOptions } from './service'
 import {
   VerificationMethod,
   VerificationMethodOptions,
 } from './verificationMethod'
 import { didDocumentSchema, stringOrDid } from './schemas'
 import { DidDocumentError } from './error'
+import { Modify } from './utils'
 
-type StringOrVerificationMethodArray = Array<string | VerificationMethodOptions>
+type StringOrVerificationMethodArray = Array<
+  string | VerificationMethodOptions | VerificationMethod
+>
 
-export type DidDocumentOptions = z.input<typeof didDocumentSchema> & {
-  verificationMethod?: Array<VerificationMethodOptions>
-  authentication?: StringOrVerificationMethodArray
-  assertionMethod?: StringOrVerificationMethodArray
-  keyAgreement?: StringOrVerificationMethodArray
-  capabilityInvocation?: StringOrVerificationMethodArray
-  capabilityDelegation?: StringOrVerificationMethodArray
-  service?: Array<ServiceEndpointOptions>
-} & Record<string, unknown>
+export type DidDocumentOptions = Modify<
+  z.input<typeof didDocumentSchema>,
+  {
+    verificationMethod?: Array<VerificationMethodOptions>
+    authentication?: StringOrVerificationMethodArray
+    assertionMethod?: StringOrVerificationMethodArray
+    keyAgreement?: StringOrVerificationMethodArray
+    capabilityInvocation?: StringOrVerificationMethodArray
+    capabilityDelegation?: StringOrVerificationMethodArray
+    service?: Array<ServiceOptions | Service>
+  }
+> &
+  Record<string, unknown>
 
 export class DidDocument {
+  public fullDocument: DidDocumentOptions
+
   public id: Did
   public alsoKnownAs?: Array<string>
   public controller?: Did | Array<Did>
@@ -30,44 +39,34 @@ export class DidDocument {
   public keyAgreement?: Array<VerificationMethod | string>
   public capabilityInvocation?: Array<VerificationMethod | string>
   public capabilityDelegation?: Array<VerificationMethod | string>
-  public service?: Array<ServiceEndpoint>
+  public service?: Array<Service>
 
   public constructor(options: DidDocumentOptions) {
-    const {
-      id,
-      service,
-      capabilityDelegation,
-      capabilityInvocation,
-      keyAgreement,
-      authentication,
-      verificationMethod,
-      controller,
-      alsoKnownAs,
-      assertionMethod,
-    } = didDocumentSchema.parse(options)
+    this.fullDocument = options
+    const parsed = didDocumentSchema.parse(options)
 
-    this.id = id
-    this.alsoKnownAs = alsoKnownAs
-    this.controller = controller
-    this.verificationMethod = verificationMethod
-    this.authentication = authentication
-    this.assertionMethod = assertionMethod
-    this.keyAgreement = keyAgreement
-    this.service = service
-    this.capabilityDelegation = capabilityDelegation
-    this.capabilityInvocation = capabilityInvocation
+    this.id = parsed.id
+    this.alsoKnownAs = parsed.alsoKnownAs
+    this.controller = parsed.controller
+    this.verificationMethod = parsed.verificationMethod
+    this.authentication = parsed.authentication
+    this.assertionMethod = parsed.assertionMethod
+    this.keyAgreement = parsed.keyAgreement
+    this.capabilityDelegation = parsed.capabilityDelegation
+    this.capabilityInvocation = parsed.capabilityInvocation
+    this.service = parsed.service
   }
 
   public dereferenceToVerificationMethod(didUrl: z.input<typeof stringOrDid>) {
     const did = stringOrDid.parse(didUrl)
 
     const verificationMethod = this.verificationMethod?.find(
-      (verificationMethod) => verificationMethod.id.did === did.did
+      (verificationMethod) => verificationMethod.id.did === did.toString()
     )
 
     if (!verificationMethod) {
       throw new DidDocumentError(
-        `Verification method for did '${did}' not found`
+        `Verification method for did '${did.toString()}' not found`
       )
     }
   }
