@@ -1,1 +1,1 @@
-export * from './replaceType'
+export * from './modifyType'

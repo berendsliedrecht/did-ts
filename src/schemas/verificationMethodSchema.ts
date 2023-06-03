@@ -35,6 +35,19 @@ export const verificationMethodSchema = z
       : undefined,
   }))
 
+export const uniqueVerificationMethodsSchema = z
+  .array(verificationMethodSchema)
+  .refine((verificationMethods) => {
+    const idSet = new Set()
+    for (const obj of verificationMethods) {
+      if (idSet.has(obj.id)) {
+        return false
+      }
+      idSet.add(obj.id)
+    }
+    return true
+  }, `Duplicate verificationMethod.id found. They must be unique`)
+
 export const stringOrVerificationMethod = z
   .union([z.string(), verificationMethodSchema])
   .transform((verificationMethod) => {
@@ -43,3 +56,16 @@ export const stringOrVerificationMethod = z
     }
     return new VerificationMethod(verificationMethod)
   })
+
+export const uniqueStringOrVerificationMethodsSchema = (name: string) =>
+  z.array(stringOrVerificationMethod).refine((verificationMethods) => {
+    const idSet = new Set()
+    for (const obj of verificationMethods) {
+      const id = typeof obj === 'string' ? obj : obj.id.toUrl()
+      if (idSet.has(id)) {
+        return false
+      }
+      idSet.add(id)
+    }
+    return true
+  }, `Duplicate ${name}.id found. They must be unique`)

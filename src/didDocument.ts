@@ -5,7 +5,13 @@ import {
   VerificationMethod,
   VerificationMethodOptions,
 } from './verificationMethod'
-import { didDocumentSchema, stringOrDid } from './schemas'
+import {
+  didDocumentSchema,
+  stringOrDid,
+  uniqueServicesSchema,
+  uniqueStringOrVerificationMethodsSchema,
+  uniqueVerificationMethodsSchema,
+} from './schemas'
 import { DidDocumentError } from './error'
 import { Modify } from './utils'
 
@@ -148,6 +154,8 @@ export class DidDocument {
       this.verificationMethod = [new VerificationMethod(verificationMethod)]
     }
 
+    uniqueVerificationMethodsSchema.parse(this.verificationMethod)
+
     return this as ReturnBuilderWithVerificationMethod<this>
   }
 
@@ -155,6 +163,7 @@ export class DidDocument {
     verificationMethodOrString: VerificationMethodOptions | string
   ): ReturnBuilderWithAuthentication<this> {
     this.authentication = this.addVerificationMethodOrString(
+      'authentication',
       this.authentication,
       verificationMethodOrString
     )
@@ -166,6 +175,7 @@ export class DidDocument {
     verificationMethodOrString: VerificationMethodOptions | string
   ): ReturnBuilderWithKeyAgreementMethod<this> {
     this.keyAgreement = this.addVerificationMethodOrString(
+      'keyAgreement',
       this.keyAgreement,
       verificationMethodOrString
     )
@@ -177,6 +187,7 @@ export class DidDocument {
     verificationMethodOrString: VerificationMethodOptions | string
   ): ReturnBuilderWithAssertionMethod<this> {
     this.assertionMethod = this.addVerificationMethodOrString(
+      'assertionMethod',
       this.assertionMethod,
       verificationMethodOrString
     )
@@ -188,6 +199,7 @@ export class DidDocument {
     verificationMethodOrString: VerificationMethodOptions | string
   ): ReturnBuilderWithCapabilityDelegation<this> {
     this.capabilityDelegation = this.addVerificationMethodOrString(
+      'capabilityDelegation',
       this.capabilityDelegation,
       verificationMethodOrString
     )
@@ -199,6 +211,7 @@ export class DidDocument {
     verificationMethodOrString: VerificationMethodOptions | string
   ): ReturnBuilderWithCapabilityInvocation<this> {
     this.capabilityInvocation = this.addVerificationMethodOrString(
+      'capabilityInvocation',
       this.capabilityInvocation,
       verificationMethodOrString
     )
@@ -214,10 +227,13 @@ export class DidDocument {
       this.service = [instanceService]
     }
 
+    uniqueServicesSchema.parse(this.service)
+
     return this as ReturnBuilderWithService<this>
   }
 
   private addVerificationMethodOrString(
+    fieldName: string,
     previousItem: Array<VerificationMethod | string> | undefined,
     verificationMethodOrString: VerificationMethodOptions | string
   ) {
@@ -236,6 +252,8 @@ export class DidDocument {
         newItem = [vm]
       }
     }
+
+    uniqueStringOrVerificationMethodsSchema(fieldName).parse(newItem)
 
     return newItem
   }
