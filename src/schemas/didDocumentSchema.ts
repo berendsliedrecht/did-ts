@@ -5,16 +5,24 @@ import {
   verificationMethodSchema,
 } from './verificationMethodSchema'
 import { serviceSchema } from './serviceSchema'
+import { ServiceEndpoint } from '../serviceEndpoint'
 
-export const didDocumentSchema = z.object({
-  id: stringOrDid,
-  alsoKnownAs: z.optional(z.array(z.string().url())),
-  controller: z.optional(stringOrDid.or(z.array(stringOrDid))),
-  verificationMethod: z.optional(verificationMethodSchema),
-  authentication: z.optional(stringOrVerificationMethod),
-  assetionMethod: z.optional(stringOrVerificationMethod),
-  keyAgreement: z.optional(stringOrVerificationMethod),
-  capabilityInvocation: z.optional(stringOrVerificationMethod),
-  capabilityDelegation: z.optional(stringOrVerificationMethod),
-  service: z.optional(serviceSchema),
-})
+export const didDocumentSchema = z
+  .object({
+    id: stringOrDid,
+    alsoKnownAs: z.optional(z.array(z.string().url())),
+    controller: z.optional(stringOrDid.or(z.array(stringOrDid))),
+    verificationMethod: z.optional(z.array(verificationMethodSchema)),
+    authentication: z.optional(z.array(stringOrVerificationMethod)),
+    assertionMethod: z.optional(z.array(stringOrVerificationMethod)),
+    keyAgreement: z.optional(z.array(stringOrVerificationMethod)),
+    capabilityInvocation: z.optional(z.array(stringOrVerificationMethod)),
+    capabilityDelegation: z.optional(z.array(stringOrVerificationMethod)),
+    service: z.optional(z.array(serviceSchema)),
+  })
+  .transform((document) => {
+    return {
+      ...document,
+      service: document.service?.map((s) => new ServiceEndpoint(s)),
+    }
+  })

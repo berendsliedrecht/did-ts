@@ -1,4 +1,5 @@
-import { PREFIX_FRAGMENT, PREFIX_PATH, PREFIX_QUERY } from '../did'
+import { DidError } from '../error'
+import { Did, PREFIX_FRAGMENT, PREFIX_PATH, PREFIX_QUERY } from '../did'
 import { z } from 'zod'
 
 const DID_URL_REGEXP =
@@ -78,5 +79,15 @@ export const didSchema = z
     }
   })
 
-export const stringOrDidUrl = z.string().or(didSchema)
-export const stringOrDid = z.string().or(didSchema)
+export const stringOrDid = z
+  .string()
+  .or(z.custom<Did>((did) => did instanceof Did))
+  .transform((did) => {
+    if (typeof did === 'string') {
+      return new Did(did)
+    } else if (did instanceof Did) {
+      return did
+    } else {
+      throw new DidError(`id must be of type 'string' or an instance of 'Did'`)
+    }
+  })

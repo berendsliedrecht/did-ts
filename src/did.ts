@@ -32,11 +32,14 @@ export class Did {
   private fragment?: string
   private parameterKeys: Array<string> = DEFAULT_PARAMETER_KEYS
 
-  public constructor(pdid: string) {
-    const { did, fragment, path, query } = didUrlSchema(
-      this.parameterKeys
-    ).parse(pdid)
-    this.did = did
+  public constructor(did: string) {
+    const {
+      did: didBase,
+      fragment,
+      path,
+      query,
+    } = didUrlSchema(this.parameterKeys).parse(did)
+    this.did = didBase
     this.path = path
     this.query = query
     this.fragment = fragment
