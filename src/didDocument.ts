@@ -27,6 +27,32 @@ export type DidDocumentOptions = Modify<
 > &
   Record<string, unknown>
 
+type MakePropertyRequired<T, K extends keyof T> = T & Required<Pick<T, K>>
+type ReturnBuilderWithAlsoKnownAs<T extends DidDocument> = MakePropertyRequired<
+  T,
+  'alsoKnownAs'
+>
+type ReturnBuilderWithController<T extends DidDocument> = MakePropertyRequired<
+  T,
+  'controller'
+>
+type ReturnBuilderWithVerificationMethod<T extends DidDocument> =
+  MakePropertyRequired<T, 'verificationMethod'>
+type ReturnBuilderWithAuthentication<T extends DidDocument> =
+  MakePropertyRequired<T, 'authentication'>
+type ReturnBuilderWithAssertionMethod<T extends DidDocument> =
+  MakePropertyRequired<T, 'assertionMethod'>
+type ReturnBuilderWithKeyAgreementMethod<T extends DidDocument> =
+  MakePropertyRequired<T, 'keyAgreement'>
+type ReturnBuilderWithCapabilityInvocation<T extends DidDocument> =
+  MakePropertyRequired<T, 'capabilityInvocation'>
+type ReturnBuilderWithCapabilityDelegation<T extends DidDocument> =
+  MakePropertyRequired<T, 'capabilityDelegation'>
+type ReturnBuilderWithService<T extends DidDocument> = MakePropertyRequired<
+  T,
+  'service'
+>
+
 export class DidDocument {
   public fullDocument: DidDocumentOptions
 
@@ -79,5 +105,144 @@ export class DidDocument {
     } catch {
       return undefined
     }
+  }
+
+  public addAlsoKnownAs(
+    alsoKnownAs: string
+  ): ReturnBuilderWithAlsoKnownAs<this> {
+    if (this.alsoKnownAs) {
+      this.alsoKnownAs.push(alsoKnownAs)
+    } else {
+      this.alsoKnownAs = [alsoKnownAs]
+    }
+
+    return this as ReturnBuilderWithAlsoKnownAs<this>
+  }
+
+  public addController(
+    controller: string | Did,
+    asArray = true
+  ): ReturnBuilderWithController<this> {
+    const instancedController =
+      typeof controller === 'string' ? new Did(controller) : controller
+
+    if (this.controller) {
+      if (Array.isArray(this.controller)) {
+        this.controller.push(instancedController)
+      } else {
+        this.controller = [this.controller, instancedController]
+      }
+    } else {
+      this.controller = asArray ? [instancedController] : instancedController
+    }
+
+    return this as ReturnBuilderWithController<this>
+  }
+
+  public addVerificationMethod(
+    verificationMethod: VerificationMethodOptions
+  ): ReturnBuilderWithVerificationMethod<this> {
+    if (this.verificationMethod) {
+      this.verificationMethod.push(new VerificationMethod(verificationMethod))
+    } else {
+      this.verificationMethod = [new VerificationMethod(verificationMethod)]
+    }
+
+    return this as ReturnBuilderWithVerificationMethod<this>
+  }
+
+  public addAuthentication(
+    verificationMethodOrString: VerificationMethodOptions | string
+  ): ReturnBuilderWithAuthentication<this> {
+    this.authentication = this.addVerificationMethodOrString(
+      this.authentication,
+      verificationMethodOrString
+    )
+
+    return this as ReturnBuilderWithAuthentication<this>
+  }
+
+  public addKeyAgreement(
+    verificationMethodOrString: VerificationMethodOptions | string
+  ): ReturnBuilderWithKeyAgreementMethod<this> {
+    this.keyAgreement = this.addVerificationMethodOrString(
+      this.keyAgreement,
+      verificationMethodOrString
+    )
+
+    return this as ReturnBuilderWithKeyAgreementMethod<this>
+  }
+
+  public addAssertionMethod(
+    verificationMethodOrString: VerificationMethodOptions | string
+  ): ReturnBuilderWithAssertionMethod<this> {
+    this.assertionMethod = this.addVerificationMethodOrString(
+      this.assertionMethod,
+      verificationMethodOrString
+    )
+
+    return this as ReturnBuilderWithAssertionMethod<this>
+  }
+
+  public addCapabilityDelegation(
+    verificationMethodOrString: VerificationMethodOptions | string
+  ): ReturnBuilderWithCapabilityDelegation<this> {
+    this.capabilityDelegation = this.addVerificationMethodOrString(
+      this.capabilityDelegation,
+      verificationMethodOrString
+    )
+
+    return this as ReturnBuilderWithCapabilityDelegation<this>
+  }
+
+  public addCapabilityInvocation(
+    verificationMethodOrString: VerificationMethodOptions | string
+  ): ReturnBuilderWithCapabilityInvocation<this> {
+    this.capabilityInvocation = this.addVerificationMethodOrString(
+      this.capabilityInvocation,
+      verificationMethodOrString
+    )
+
+    return this as ReturnBuilderWithCapabilityInvocation<this>
+  }
+
+  public addService(service: ServiceOptions): ReturnBuilderWithService<this> {
+    const instanceService = new Service(service)
+    if (this.service) {
+      this.service.push(instanceService)
+    } else {
+      this.service = [instanceService]
+    }
+
+    return this as ReturnBuilderWithService<this>
+  }
+
+  private addVerificationMethodOrString(
+    previousItem: Array<VerificationMethod | string> | undefined,
+    verificationMethodOrString: VerificationMethodOptions | string
+  ) {
+    let newItem = previousItem
+    if (typeof verificationMethodOrString === 'string') {
+      if (newItem) {
+        newItem.push(verificationMethodOrString)
+      } else {
+        newItem = [verificationMethodOrString]
+      }
+    } else {
+      const vm = new VerificationMethod(verificationMethodOrString)
+      if (newItem) {
+        newItem.push(vm)
+      } else {
+        newItem = [vm]
+      }
+    }
+
+    return newItem
+  }
+
+  public toJSON() {
+    const { fullDocument, ...rest } = this
+
+    return rest
   }
 }

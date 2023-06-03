@@ -11,4 +11,9 @@ export class PublicKeyJwk {
     this.fullPublicKeyJwk = options
     publicKeyJwkSchema.parse(options)
   }
+
+  public toJSON() {
+    const { fullPublicKeyJwk, ...rest } = this.fullPublicKeyJwk
+    return rest
+  }
 }

@@ -38,4 +38,9 @@ export class VerificationMethod {
     this.publicKeyJwk = publicKeyJwk
     this.publicKeyMultibase = publicKeyMultibase
   }
+
+  public toJSON() {
+    const { fullVerificationMethod, ...rest } = this
+    return rest
+  }
 }

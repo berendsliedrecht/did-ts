@@ -19,4 +19,10 @@ export class Service {
     this.type = type
     this.serviceEndpoint = serviceEndpoint
   }
+
+  public toJSON() {
+    const { fullService, ...rest } = this
+
+    return rest
+  }
 }

@@ -175,7 +175,7 @@ export class Did {
 
   public get didUrlParts(): DidUrlParts {
     // This is done because the params are calculated based on the query and parameterKeys, but is you set additional parameter keys later on the new parameter field is not updated
-    const newDid = new Did(this.toUrl())
+    const newDid = new Did(this.toUrl(), this.parameterKeys)
 
     return {
       fragment: newDid.fragment,
