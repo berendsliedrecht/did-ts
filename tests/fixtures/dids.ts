@@ -14,6 +14,7 @@ export const DIDS: Record<string, { parts: DidParts; urlParts: DidUrlParts }> =
           path: undefined,
           query: undefined,
           fragment: 'z6Mkon4zmgRrGa5zsXSM3irBdFqRrzQdQuHkmnViw4Bjie57',
+          parameters: undefined,
         },
       },
     'did:key:z6MktP1rfftmkqV4HCCiRsmNj4tgbisxwocEVry6mKHoNiVu#z6MktP1rfftmkqV4HCCiRsmNj4tgbisxwocEVry6mKHoNiVu':
@@ -28,6 +29,7 @@ export const DIDS: Record<string, { parts: DidParts; urlParts: DidUrlParts }> =
           path: undefined,
           query: undefined,
           fragment: 'z6MktP1rfftmkqV4HCCiRsmNj4tgbisxwocEVry6mKHoNiVu',
+          parameters: undefined,
         },
       },
     'did:sov:2wJPyULfLLnYTEFYzByfUR': {
@@ -41,6 +43,7 @@ export const DIDS: Record<string, { parts: DidParts; urlParts: DidUrlParts }> =
         path: undefined,
         query: undefined,
         fragment: undefined,
+        parameters: undefined,
       },
     },
     'did:sov:HR6vs6GEZ8rHaVgjg2WodM': {
@@ -54,6 +57,7 @@ export const DIDS: Record<string, { parts: DidParts; urlParts: DidUrlParts }> =
         path: undefined,
         query: undefined,
         fragment: undefined,
+        parameters: undefined,
       },
     },
     'did:ion:EiClkZMDxPKqC9c-umQfTkR8vvZ9JPhl_xLDI9Nfk38w5w': {
@@ -67,6 +71,7 @@ export const DIDS: Record<string, { parts: DidParts; urlParts: DidUrlParts }> =
         path: undefined,
         query: undefined,
         fragment: undefined,
+        parameters: undefined,
       },
     },
     'did:ala:quor:redT:ec27f358fd0d11d8934ceb51305622ae79b6ad15': {
@@ -80,6 +85,7 @@ export const DIDS: Record<string, { parts: DidParts; urlParts: DidUrlParts }> =
         path: undefined,
         query: undefined,
         fragment: undefined,
+        parameters: undefined,
       },
     },
     'did:evan:testcore:0x126E901F6F408f5E260d95c62E7c73D9B60fd734': {
@@ -93,6 +99,7 @@ export const DIDS: Record<string, { parts: DidParts; urlParts: DidUrlParts }> =
         path: undefined,
         query: undefined,
         fragment: undefined,
+        parameters: undefined,
       },
     },
     'did:cheqd:testnet:55dbc8bf-fba3-4117-855c-1e0dc1d3bb47': {
@@ -106,6 +113,7 @@ export const DIDS: Record<string, { parts: DidParts; urlParts: DidUrlParts }> =
         path: undefined,
         query: undefined,
         fragment: undefined,
+        parameters: undefined,
       },
     },
     'did:key:abc': {
@@ -119,6 +127,7 @@ export const DIDS: Record<string, { parts: DidParts; urlParts: DidUrlParts }> =
         path: undefined,
         query: undefined,
         fragment: undefined,
+        parameters: undefined,
       },
     },
     'did:key:abc/some-path?versionId=1#key-1': {
@@ -132,6 +141,7 @@ export const DIDS: Record<string, { parts: DidParts; urlParts: DidUrlParts }> =
         path: 'some-path',
         query: { versionId: '1' },
         fragment: 'key-1',
+        parameters: { versionId: '1' },
       },
     },
     'did:example:123456?versionId=1': {
@@ -145,6 +155,7 @@ export const DIDS: Record<string, { parts: DidParts; urlParts: DidUrlParts }> =
         path: undefined,
         query: { versionId: '1' },
         fragment: undefined,
+        parameters: { versionId: '1' },
       },
     },
     'did:example:123#public-key-0': {
@@ -158,6 +169,7 @@ export const DIDS: Record<string, { parts: DidParts; urlParts: DidUrlParts }> =
         path: undefined,
         query: undefined,
         fragment: 'public-key-0',
+        parameters: undefined,
       },
     },
     'did:example:123?service=agent&relativeRef=/credentials#degree': {
@@ -171,6 +183,7 @@ export const DIDS: Record<string, { parts: DidParts; urlParts: DidUrlParts }> =
         path: undefined,
         query: { service: 'agent', relativeRef: '/credentials' },
         fragment: 'degree',
+        parameters: { service: 'agent', relativeRef: '/credentials' },
       },
     },
     'did:example:123?service=files&relativeRef=/resume.pdf': {
@@ -184,6 +197,7 @@ export const DIDS: Record<string, { parts: DidParts; urlParts: DidUrlParts }> =
         path: undefined,
         query: { service: 'files', relativeRef: '/resume.pdf' },
         fragment: undefined,
+        parameters: { service: 'files', relativeRef: '/resume.pdf' },
       },
     },
     'did:example:123#_Qq0UL2Fq651Q0Fjd6TvnYE-faHiOpRlPVQcY_-tA4A': {
@@ -197,6 +211,7 @@ export const DIDS: Record<string, { parts: DidParts; urlParts: DidUrlParts }> =
         path: undefined,
         query: undefined,
         fragment: '_Qq0UL2Fq651Q0Fjd6TvnYE-faHiOpRlPVQcY_-tA4A',
+        parameters: undefined,
       },
     },
   }

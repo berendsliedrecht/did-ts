@@ -37,15 +37,25 @@ describe('Did', (_) => {
     const didUrl = 'did:key:abc/some-path?versionId=1#key-1'
     const did = new Did(didUrl)
 
-    assert.strictEqual(did.toUrl(), didUrl)
+    assert.deepStrictEqual(did.toUrl(), didUrl)
   })
 
-  it('should extract the path, query and fragment', (_) => {
-    const didUrl = 'did:key:abc/some-path?versionId=1#key-1'
+  it('should add a new parameter key', (_) => {
+    const didUrl = 'did:key:abc?some-key=test'
     const did = new Did(didUrl)
+    did.addParameterKey('some-key')
 
-    assert.strictEqual(did.path, 'some-path')
-    assert.strictEqual(did.query, 'versionId=1')
-    assert.strictEqual(did.fragment, 'key-1')
+    assert.deepStrictEqual(did.didUrlParts.parameters, { 'some-key': 'test' })
+  })
+
+  it('should add a new parameter keys', (_) => {
+    const didUrl = 'did:key:abc?some-key=test&some-other-key=test-two'
+    const did = new Did(didUrl)
+    did.addParameterKey(['some-key', 'some-other-key'])
+
+    assert.deepStrictEqual(did.didUrlParts.parameters, {
+      'some-key': 'test',
+      'some-other-key': 'test-two',
+    })
   })
 })

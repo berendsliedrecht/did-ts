@@ -15,13 +15,21 @@ export type DidUrlParts = {
   path?: string
   query?: Record<string, string>
   fragment?: string
+  parameters?: Record<string, string>
 }
 
 export class Did {
   public did: string
-  public path?: string
-  public query?: string
-  public fragment?: string
+  private path?: string
+  private query?: string
+  private fragment?: string
+  private parameterKeys: Array<string> = [
+    'service',
+    'relativeRef',
+    'versionId',
+    'versionTime',
+    'hl',
+  ]
 
   public constructor(did: string) {
     const url = new URL(did)
@@ -106,16 +114,28 @@ export class Did {
 
   public get didUrlParts(): DidUrlParts {
     const query = new URLSearchParams(this.query)
+    const queryObj =
+      query.size > 0
+        ? [...query.entries()].reduce(
+            (prev, [k, v]) => ({ [k]: v, ...prev } as Record<string, string>),
+            {}
+          )
+        : undefined
+
+    const parameters = queryObj
+      ? Object.entries(queryObj).reduce((prev, [k, v]) => {
+          if (this.parameterKeys.includes(k)) {
+            return { [k]: v, ...prev }
+          }
+          return prev
+        }, {})
+      : undefined
+
     return {
       path: this.path,
-      query:
-        query.size > 0
-          ? [...query.entries()].reduce(
-              (prev, [k, v]) => ({ [k]: v, ...prev } as Record<string, string>),
-              {}
-            )
-          : undefined,
+      query: queryObj,
       fragment: this.fragment,
+      parameters,
     }
   }
 
@@ -124,5 +144,15 @@ export class Did {
       return s.slice(1)
     }
     return s
+  }
+
+  public addParameterKey(key: string | Array<string>): this {
+    if (typeof key === 'string') {
+      this.parameterKeys.push(key)
+    } else if (Array.isArray(key)) {
+      this.parameterKeys.push(...key)
+    }
+
+    return this
   }
 }
