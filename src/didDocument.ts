@@ -242,32 +242,34 @@ export class DidDocument {
     verificationMethodOrDidOrString: VerificationMethodOrDidOrString
   ) {
     let newItem = previousItem
-    if (verificationMethodOrDidOrString instanceof Did) {
+
+    const id =
+      verificationMethodOrDidOrString instanceof Did
+        ? verificationMethodOrDidOrString
+        : typeof verificationMethodOrDidOrString === 'string'
+        ? new Did(verificationMethodOrDidOrString)
+        : undefined
+
+    const vm =
+      id === undefined
+        ? verificationMethodOrDidOrString instanceof VerificationMethod
+          ? verificationMethodOrDidOrString
+          : new VerificationMethod(
+              verificationMethodOrDidOrString as VerificationMethodOptions
+            )
+        : undefined
+
+    const item = id ?? vm
+    if (item) {
       if (newItem) {
-        newItem.push(verificationMethodOrDidOrString)
+        newItem.push(item)
       } else {
-        newItem = [verificationMethodOrDidOrString]
-      }
-    } else if (typeof verificationMethodOrDidOrString === 'string') {
-      const did = new Did(verificationMethodOrDidOrString)
-      if (newItem) {
-        newItem.push(did)
-      } else {
-        newItem = [did]
-      }
-    } else if (verificationMethodOrDidOrString instanceof VerificationMethod) {
-      if (newItem) {
-        newItem.push(verificationMethodOrDidOrString)
-      } else {
-        newItem = [verificationMethodOrDidOrString]
+        newItem = [item]
       }
     } else {
-      const vm = new VerificationMethod(verificationMethodOrDidOrString)
-      if (newItem) {
-        newItem.push(vm)
-      } else {
-        newItem = [vm]
-      }
+      throw new DidDocumentError(
+        `Something went wrong while trying to parse verification method for ${fieldName} with item ${verificationMethodOrDidOrString}`
+      )
     }
 
     uniqueStringOrVerificationMethodsSchema(fieldName).parse(newItem)
@@ -296,9 +298,7 @@ export class DidDocument {
       capabilityDelegation: this.capabilityDelegation?.map(
         mapStringOrVerificationMethod
       ),
-      authentication: this.authentication?.map(
-        mapStringOrVerificationMethod
-      ),
+      authentication: this.authentication?.map(mapStringOrVerificationMethod),
     }
     const cleanedRest = Object.fromEntries(
       Object.entries(mappedRest).filter(([_, value]) => value !== undefined)
