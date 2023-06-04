@@ -1,7 +1,8 @@
 {
   "git": {
-    "push": false,
-    "commit": false,
+    "push": true,
+    "commit": true,
+    "commitMessage": "chore: update to v${version}",
     "requireCommits": true,
     "tagAnnotation": "${version}",
     "requireBranch": "main"
