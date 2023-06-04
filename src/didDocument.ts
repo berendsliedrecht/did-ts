@@ -175,6 +175,19 @@ export class DidDocument {
     return this as ReturnBuilderWithAuthentication<this>
   }
 
+  public addAuthenticationUnsafe(
+    verificationMethodOrDidOrString: VerificationMethodOrDidOrString
+  ): ReturnBuilderWithAuthentication<this> {
+    this.authentication = this.addVerificationMethodOrDidOrString(
+      'authentication',
+      this.authentication,
+      verificationMethodOrDidOrString,
+      true
+    )
+
+    return this as ReturnBuilderWithAuthentication<this>
+  }
+
   public addKeyAgreement(
     verificationMethodOrStringOrDid: VerificationMethodOrDidOrString
   ): ReturnBuilderWithKeyAgreementMethod<this> {
@@ -182,6 +195,19 @@ export class DidDocument {
       'keyAgreement',
       this.keyAgreement,
       verificationMethodOrStringOrDid
+    )
+
+    return this as ReturnBuilderWithKeyAgreementMethod<this>
+  }
+
+  public addKeyAgreementUnsafe(
+    verificationMethodOrStringOrDid: VerificationMethodOrDidOrString
+  ): ReturnBuilderWithKeyAgreementMethod<this> {
+    this.keyAgreement = this.addVerificationMethodOrDidOrString(
+      'keyAgreement',
+      this.keyAgreement,
+      verificationMethodOrStringOrDid,
+      true
     )
 
     return this as ReturnBuilderWithKeyAgreementMethod<this>
@@ -199,6 +225,19 @@ export class DidDocument {
     return this as ReturnBuilderWithAssertionMethod<this>
   }
 
+  public addAssertionMethodUnsafe(
+    verificationMethodOrStringOrDid: VerificationMethodOrDidOrString
+  ): ReturnBuilderWithAssertionMethod<this> {
+    this.assertionMethod = this.addVerificationMethodOrDidOrString(
+      'assertionMethod',
+      this.assertionMethod,
+      verificationMethodOrStringOrDid,
+      true
+    )
+
+    return this as ReturnBuilderWithAssertionMethod<this>
+  }
+
   public addCapabilityDelegation(
     verificationMethodOrStringOrDid: VerificationMethodOrDidOrString
   ): ReturnBuilderWithCapabilityDelegation<this> {
@@ -211,6 +250,19 @@ export class DidDocument {
     return this as ReturnBuilderWithCapabilityDelegation<this>
   }
 
+  public addCapabilityDelegationUnsafe(
+    verificationMethodOrStringOrDid: VerificationMethodOrDidOrString
+  ): ReturnBuilderWithCapabilityDelegation<this> {
+    this.capabilityDelegation = this.addVerificationMethodOrDidOrString(
+      'capabilityDelegation',
+      this.capabilityDelegation,
+      verificationMethodOrStringOrDid,
+      true
+    )
+
+    return this as ReturnBuilderWithCapabilityDelegation<this>
+  }
+
   public addCapabilityInvocation(
     verificationMethodOrStringOrDid: VerificationMethodOrDidOrString
   ): ReturnBuilderWithCapabilityInvocation<this> {
@@ -218,6 +270,19 @@ export class DidDocument {
       'capabilityInvocation',
       this.capabilityInvocation,
       verificationMethodOrStringOrDid
+    )
+
+    return this as ReturnBuilderWithCapabilityInvocation<this>
+  }
+
+  public addCapabilityInvocationUnsafe(
+    verificationMethodOrStringOrDid: VerificationMethodOrDidOrString
+  ): ReturnBuilderWithCapabilityInvocation<this> {
+    this.capabilityInvocation = this.addVerificationMethodOrDidOrString(
+      'capabilityInvocation',
+      this.capabilityInvocation,
+      verificationMethodOrStringOrDid,
+      true
     )
 
     return this as ReturnBuilderWithCapabilityInvocation<this>
@@ -239,7 +304,8 @@ export class DidDocument {
   private addVerificationMethodOrDidOrString(
     fieldName: string,
     previousItem: Array<VerificationMethod | Did> | undefined,
-    verificationMethodOrDidOrString: VerificationMethodOrDidOrString
+    verificationMethodOrDidOrString: VerificationMethodOrDidOrString,
+    unsafe = false
   ) {
     let newItem = previousItem
 
@@ -249,6 +315,22 @@ export class DidDocument {
         : typeof verificationMethodOrDidOrString === 'string'
         ? new Did(verificationMethodOrDidOrString)
         : undefined
+
+    if (id && !unsafe) {
+      const verificationMethodIds = this.verificationMethod?.map((vm) =>
+        vm.id.toUrl()
+      )
+      if (
+        verificationMethodIds === undefined ||
+        !verificationMethodIds.includes(id.toUrl())
+      ) {
+        throw new DidDocumentError(
+          `Tried to add '${id.toUrl()}' to '${fieldName}', but it was not found in the verificationMethod. If you want to add it anyways, try 'this.add${
+            fieldName.charAt(0).toUpperCase() + fieldName.slice(1)
+          }Unsafe(...)'`
+        )
+      }
+    }
 
     const vm =
       id === undefined

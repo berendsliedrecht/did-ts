@@ -29,7 +29,7 @@ describe('Did Document', () => {
         })
         .addController(new Did('did:example:123'), true)
         .addAlsoKnownAs('AKA')
-        .addKeyAgreement(new Did('did:foo:bar'))
+        .addKeyAgreementUnsafe(new Did('did:foo:bar'))
         .addAssertionMethod('did:example:123')
         .addAuthentication({
           controller: 'did:me:123',
@@ -43,7 +43,7 @@ describe('Did Document', () => {
             controller: 'did:me:duh',
           })
         )
-        .addCapabilityInvocation('did:me:duh')
+        .addCapabilityInvocationUnsafe('did:me:duh')
         .addAssertionMethod({
           id: 'did:key:foobar',
           type: 'a',
