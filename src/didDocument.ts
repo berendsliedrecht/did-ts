@@ -15,19 +15,23 @@ import {
 import { DidDocumentError } from './error'
 import { Modify } from './utils'
 
-type StringOrVerificationMethodArray = Array<
-  string | VerificationMethodOptions | VerificationMethod
->
+type DidOrVerificationMethodArray = Array<VerificationMethodOrDidOrString>
+
+type VerificationMethodOrDidOrString =
+  | VerificationMethod
+  | VerificationMethodOptions
+  | Did
+  | string
 
 export type DidDocumentOptions = Modify<
   z.input<typeof didDocumentSchema>,
   {
     verificationMethod?: Array<VerificationMethodOptions>
-    authentication?: StringOrVerificationMethodArray
-    assertionMethod?: StringOrVerificationMethodArray
-    keyAgreement?: StringOrVerificationMethodArray
-    capabilityInvocation?: StringOrVerificationMethodArray
-    capabilityDelegation?: StringOrVerificationMethodArray
+    authentication?: DidOrVerificationMethodArray
+    assertionMethod?: DidOrVerificationMethodArray
+    keyAgreement?: DidOrVerificationMethodArray
+    capabilityInvocation?: DidOrVerificationMethodArray
+    capabilityDelegation?: DidOrVerificationMethodArray
     service?: Array<ServiceOptions | Service>
   }
 > &
@@ -66,11 +70,11 @@ export class DidDocument {
   public alsoKnownAs?: Array<string>
   public controller?: Did | Array<Did>
   public verificationMethod?: Array<VerificationMethod>
-  public authentication?: Array<VerificationMethod | string>
-  public assertionMethod?: Array<VerificationMethod | string>
-  public keyAgreement?: Array<VerificationMethod | string>
-  public capabilityInvocation?: Array<VerificationMethod | string>
-  public capabilityDelegation?: Array<VerificationMethod | string>
+  public authentication?: Array<VerificationMethod | Did>
+  public assertionMethod?: Array<VerificationMethod | Did>
+  public keyAgreement?: Array<VerificationMethod | Did>
+  public capabilityInvocation?: Array<VerificationMethod | Did>
+  public capabilityDelegation?: Array<VerificationMethod | Did>
   public service?: Array<Service>
 
   public constructor(options: DidDocumentOptions) {
@@ -160,60 +164,60 @@ export class DidDocument {
   }
 
   public addAuthentication(
-    verificationMethodOrString: VerificationMethodOptions | string
+    verificationMethodOrDidOrString: VerificationMethodOrDidOrString
   ): ReturnBuilderWithAuthentication<this> {
-    this.authentication = this.addVerificationMethodOrString(
+    this.authentication = this.addVerificationMethodOrDidOrString(
       'authentication',
       this.authentication,
-      verificationMethodOrString
+      verificationMethodOrDidOrString
     )
 
     return this as ReturnBuilderWithAuthentication<this>
   }
 
   public addKeyAgreement(
-    verificationMethodOrString: VerificationMethodOptions | string
+    verificationMethodOrStringOrDid: VerificationMethodOrDidOrString
   ): ReturnBuilderWithKeyAgreementMethod<this> {
-    this.keyAgreement = this.addVerificationMethodOrString(
+    this.keyAgreement = this.addVerificationMethodOrDidOrString(
       'keyAgreement',
       this.keyAgreement,
-      verificationMethodOrString
+      verificationMethodOrStringOrDid
     )
 
     return this as ReturnBuilderWithKeyAgreementMethod<this>
   }
 
   public addAssertionMethod(
-    verificationMethodOrString: VerificationMethodOptions | string
+    verificationMethodOrStringOrDid: VerificationMethodOrDidOrString
   ): ReturnBuilderWithAssertionMethod<this> {
-    this.assertionMethod = this.addVerificationMethodOrString(
+    this.assertionMethod = this.addVerificationMethodOrDidOrString(
       'assertionMethod',
       this.assertionMethod,
-      verificationMethodOrString
+      verificationMethodOrStringOrDid
     )
 
     return this as ReturnBuilderWithAssertionMethod<this>
   }
 
   public addCapabilityDelegation(
-    verificationMethodOrString: VerificationMethodOptions | string
+    verificationMethodOrStringOrDid: VerificationMethodOrDidOrString
   ): ReturnBuilderWithCapabilityDelegation<this> {
-    this.capabilityDelegation = this.addVerificationMethodOrString(
+    this.capabilityDelegation = this.addVerificationMethodOrDidOrString(
       'capabilityDelegation',
       this.capabilityDelegation,
-      verificationMethodOrString
+      verificationMethodOrStringOrDid
     )
 
     return this as ReturnBuilderWithCapabilityDelegation<this>
   }
 
   public addCapabilityInvocation(
-    verificationMethodOrString: VerificationMethodOptions | string
+    verificationMethodOrStringOrDid: VerificationMethodOrDidOrString
   ): ReturnBuilderWithCapabilityInvocation<this> {
-    this.capabilityInvocation = this.addVerificationMethodOrString(
+    this.capabilityInvocation = this.addVerificationMethodOrDidOrString(
       'capabilityInvocation',
       this.capabilityInvocation,
-      verificationMethodOrString
+      verificationMethodOrStringOrDid
     )
 
     return this as ReturnBuilderWithCapabilityInvocation<this>
@@ -232,20 +236,33 @@ export class DidDocument {
     return this as ReturnBuilderWithService<this>
   }
 
-  private addVerificationMethodOrString(
+  private addVerificationMethodOrDidOrString(
     fieldName: string,
-    previousItem: Array<VerificationMethod | string> | undefined,
-    verificationMethodOrString: VerificationMethodOptions | string
+    previousItem: Array<VerificationMethod | Did> | undefined,
+    verificationMethodOrDidOrString: VerificationMethodOrDidOrString
   ) {
     let newItem = previousItem
-    if (typeof verificationMethodOrString === 'string') {
+    if (verificationMethodOrDidOrString instanceof Did) {
       if (newItem) {
-        newItem.push(verificationMethodOrString)
+        newItem.push(verificationMethodOrDidOrString)
       } else {
-        newItem = [verificationMethodOrString]
+        newItem = [verificationMethodOrDidOrString]
+      }
+    } else if (typeof verificationMethodOrDidOrString === 'string') {
+      const did = new Did(verificationMethodOrDidOrString)
+      if (newItem) {
+        newItem.push(did)
+      } else {
+        newItem = [did]
+      }
+    } else if (verificationMethodOrDidOrString instanceof VerificationMethod) {
+      if (newItem) {
+        newItem.push(verificationMethodOrDidOrString)
+      } else {
+        newItem = [verificationMethodOrDidOrString]
       }
     } else {
-      const vm = new VerificationMethod(verificationMethodOrString)
+      const vm = new VerificationMethod(verificationMethodOrDidOrString)
       if (newItem) {
         newItem.push(vm)
       } else {
@@ -259,8 +276,34 @@ export class DidDocument {
   }
 
   public toJSON() {
-    const { fullDocument, ...rest } = this
+    const mapStringOrVerificationMethod = (i: Did | VerificationMethod) =>
+      i.toJSON()
 
-    return rest
+    const mappedRest = {
+      id: this.id.toJSON(),
+      alsoKnownAs: this.alsoKnownAs,
+      controller:
+        this.controller && this.controller instanceof Did
+          ? this.controller?.toJSON()
+          : this.controller?.map((c) => c.toJSON()),
+      verificationMethod: this.verificationMethod?.map((v) => v.toJSON()),
+      service: this.service?.map((s) => s.toJSON()),
+      assertionMethod: this.assertionMethod?.map(mapStringOrVerificationMethod),
+      keyAgreement: this.keyAgreement?.map(mapStringOrVerificationMethod),
+      capabilityInvocation: this.capabilityInvocation?.map(
+        mapStringOrVerificationMethod
+      ),
+      capabilityDelegation: this.capabilityDelegation?.map(
+        mapStringOrVerificationMethod
+      ),
+      authentication: this.authentication?.map(
+        mapStringOrVerificationMethod
+      ),
+    }
+    const cleanedRest = Object.fromEntries(
+      Object.entries(mappedRest).filter(([_, value]) => value !== undefined)
+    )
+
+    return cleanedRest
   }
 }

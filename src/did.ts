@@ -1,5 +1,9 @@
 import { z } from 'zod'
-import { stringOrDid, stringOrDidUrl } from './schemas'
+import {
+  didUrlSchemaWithouttransformation,
+  stringOrDid,
+  stringOrDidUrl,
+} from './schemas'
 
 export const PREFIX_PATH = '/'
 export const PREFIX_QUERY = '?'
@@ -35,7 +39,9 @@ export class Did {
   private parameterKeys: Array<string>
 
   public constructor(did: string, parameterKeys?: Array<string>) {
-    const url = new URL(did)
+    const parsedDid = didUrlSchemaWithouttransformation.parse(did)
+    const url = new URL(parsedDid)
+
     const prefixPathIndex = url.pathname.indexOf(PREFIX_PATH)
 
     const stripUntil = Math.min(

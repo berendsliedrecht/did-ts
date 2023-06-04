@@ -11,4 +11,8 @@ export class PublicKeyMultibase {
     this.publicKeyMultibase = options
     this.properties = publicKeyMultibaseSchema.parse(options)
   }
+
+  public toJSON() {
+    this.publicKeyMultibase.toString()
+  }
 }

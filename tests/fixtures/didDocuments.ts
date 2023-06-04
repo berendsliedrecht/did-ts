@@ -71,7 +71,7 @@ export const DID_DOCUMENTS: Array<DidDocumentOptions> = [
       'https://www.w3.org/ns/did/v1',
       'https://w3id.org/security/suites/jws-2020/v1',
     ],
-    id: 'did:example',
+    id: 'did:example:method-id',
     verificationMethod: [
       {
         id: 'did:example:123#key-0',
@@ -168,7 +168,7 @@ export const DID_DOCUMENTS: Array<DidDocumentOptions> = [
       'https://w3id.org/security/suites/secp256k1-2019/v1',
       'https://w3id.org/security/suites/jws-2020/v1',
     ],
-    id: 'did:example',
+    id: 'did:example:method-id',
     verificationMethod: [
       {
         id: 'did:example:123#key-0',

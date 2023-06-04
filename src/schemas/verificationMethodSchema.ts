@@ -5,6 +5,7 @@ import { publicKeyMultibaseSchema } from './publicKeyMultibaseSchema'
 import { PublicKeyJwk } from '../publicKeyJwk'
 import { PublicKeyMultibase } from '../publicKeyMultibase'
 import { VerificationMethod } from '../verificationMethod'
+import { Did } from '../did'
 
 export const verificationMethodSchema = z
   .union([
@@ -49,9 +50,9 @@ export const uniqueVerificationMethodsSchema = z
   }, `Duplicate verificationMethod.id found. They must be unique`)
 
 export const stringOrVerificationMethod = z
-  .union([z.string(), verificationMethodSchema])
+  .union([stringOrDidUrl, verificationMethodSchema])
   .transform((verificationMethod) => {
-    if (typeof verificationMethod === 'string') {
+    if (verificationMethod instanceof Did) {
       return verificationMethod
     }
     return new VerificationMethod(verificationMethod)
@@ -61,7 +62,7 @@ export const uniqueStringOrVerificationMethodsSchema = (name: string) =>
   z.array(stringOrVerificationMethod).refine((verificationMethods) => {
     const idSet = new Set()
     for (const obj of verificationMethods) {
-      const id = typeof obj === 'string' ? obj : obj.id.toUrl()
+      const id = obj instanceof Did ? obj.toUrl() : obj.id.toUrl()
       if (idSet.has(id)) {
         return false
       }

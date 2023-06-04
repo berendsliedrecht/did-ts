@@ -7,9 +7,17 @@ const DID_URL_REGEXP =
 const DID_REGEXP =
   /^did:[a-z0-9]+(?::[a-z0-9]+(?:[._-][a-z0-9]+)*)*(?:#[^s]*)?$/i
 
+export const didUrlSchemaWithouttransformation = z
+  .string()
+  .regex(DID_URL_REGEXP, { message: 'Invalid did url syntax' })
+
+export const didSchemaWithouttransformation = z
+  .string()
+  .regex(DID_REGEXP, { message: 'Invalid did syntax' })
+
 export const stringOrDid = z
   .union([
-    z.string().regex(DID_REGEXP),
+    didSchemaWithouttransformation,
     z.custom<Did>((did) => did instanceof Did),
   ])
   .transform((did: string | Did): Did => {
@@ -24,7 +32,7 @@ export const stringOrDid = z
 
 export const stringOrDidUrl = z
   .union([
-    z.string().regex(DID_URL_REGEXP),
+    didUrlSchemaWithouttransformation,
     z.custom<Did>((did) => did instanceof Did),
   ])
   .transform((did: string | Did): Did => {

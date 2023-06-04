@@ -40,7 +40,17 @@ export class VerificationMethod {
   }
 
   public toJSON() {
-    const { fullVerificationMethod, ...rest } = this
-    return rest
+    const mappedRest = {
+      id: this.id.toJSON(),
+      controller: this.controller.toJSON(),
+      type: this.type,
+      publicKeyJwk: this.publicKeyJwk?.toJSON(),
+      publicKeyMultibase: this.publicKeyMultibase?.toJSON(),
+    }
+    const cleanedRest = Object.fromEntries(
+      Object.entries(mappedRest).filter(([_, value]) => value !== undefined)
+    )
+
+    return cleanedRest
   }
 }
