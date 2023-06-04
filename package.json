@@ -10,10 +10,15 @@
     "clean": "rm -rf build",
     "clean:deps": "pnpm clean && rm -rf node_modules",
     "build": "tsc",
-    "test": "node --require ts-node/register --test ./tests/*.test.ts"
+    "test": "node --require ts-node/register --test ./tests/*.test.ts",
+    "check-format": "prettier --list-different",
+    "check-types": "pnpm build --noEmit",
+    "release": "release-it"
   },
   "devDependencies": {
     "@types/node": "18.16.16",
+    "prettier": "2.8.8",
+    "release-it": "15.10.5",
     "ts-node": "^10.9.1",
     "typescript": "~5.0.4"
   },
