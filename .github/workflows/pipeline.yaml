@@ -12,7 +12,7 @@ on:
       release-type:
         description: 'Type of release (major, minor, patch)'
         required: true
-        default: patch
+        default: prepatch
         type: choice
         options:
           - major
@@ -71,9 +71,10 @@ jobs:
 
       - name: Publish
         env:
-          GITHUB_TOKEN: ${ secrets.GH_TOKEN }
+          GITHUB_TOKEN: ${{ secrets.GH_TOKEN }}
           NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
         run: |
+          echo ${{ inputs.release-type }}
           git config --global user.email "blu3beri@proton.me"
           git config --global user.name "Berend Sliedrecht"
-          pnpm release ${{ github.events.inputs.release-type }}
+          pnpm release ${{ inputs.release-type }}
