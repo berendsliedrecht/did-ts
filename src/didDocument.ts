@@ -361,11 +361,14 @@ export class DidDocument {
     return newItem
   }
 
-  public toJSON() {
+  public toJSON(
+    omitKeys: Array<string> = ['fullDocument']
+  ): Record<string, unknown> {
     const mapStringOrVerificationMethod = (i: Did | VerificationMethod) =>
       i.toJSON()
 
     const mappedRest = {
+      ...this,
       id: this.id.did,
       alsoKnownAs: this.alsoKnownAs,
       controller:
@@ -385,7 +388,9 @@ export class DidDocument {
       authentication: this.authentication?.map(mapStringOrVerificationMethod),
     }
     const cleanedRest = Object.fromEntries(
-      Object.entries(mappedRest).filter(([_, value]) => value !== undefined)
+      Object.entries(mappedRest)
+        .filter(([_, value]) => value !== undefined)
+        .filter(([key]) => !omitKeys.includes(key))
     )
 
     return cleanedRest
