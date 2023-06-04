@@ -73,4 +73,7 @@ jobs:
         env:
           GITHUB_TOKEN: ${ secrets.GH_TOKEN }
           NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
-        run: pnpm release ${{ github.events.inputs.release-type }}
+        run: |
+          git config --global user.email "blu3beri@proton.me"
+          git config --global user.name "Berend Sliedrecht"
+          pnpm release ${{ github.events.inputs.release-type }}
