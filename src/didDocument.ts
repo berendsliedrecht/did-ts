@@ -97,7 +97,7 @@ export class DidDocument {
     const did = stringOrDid.parse(didUrl)
 
     const verificationMethod = this.verificationMethod?.find(
-      (verificationMethod) => verificationMethod.id.did === did.toString()
+      (verificationMethod) => verificationMethod.id.toUrl() === did.toUrl()
     )
 
     if (!verificationMethod) {
@@ -105,6 +105,8 @@ export class DidDocument {
         `Verification method for did '${did.toString()}' not found`
       )
     }
+
+    return verificationMethod
   }
 
   public safeDereferenceToVerificationMethod(

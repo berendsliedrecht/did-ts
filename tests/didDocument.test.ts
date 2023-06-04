@@ -145,4 +145,68 @@ describe('Did Document', () => {
       })
     })
   })
+
+  describe('Dereferencing to verification method', () => {
+    it('should dereference correctly to the associated verification method', () => {
+      const doc = new DidDocument({
+        id: 'did:example:bar',
+      }).addVerificationMethod({
+        id: 'did:example:bar#01',
+        type: 'some-type',
+        controller: 'did:example:bar',
+        publicKeyJwk: { kty: 'some-kty' },
+      })
+
+      assert.deepStrictEqual(
+        doc.dereferenceToVerificationMethod('did:example:bar#01').toJSON(),
+        {
+          id: 'did:example:bar#01',
+          type: 'some-type',
+          controller: 'did:example:bar',
+          publicKeyJwk: { kty: 'some-kty' },
+        }
+      )
+    })
+
+    it('should dereference safely to the associated verification method', () => {
+      const doc = new DidDocument({
+        id: 'did:example:bar',
+      }).addVerificationMethod({
+        id: 'did:example:bar#01',
+        type: 'some-type',
+        controller: 'did:example:bar',
+        publicKeyJwk: { kty: 'some-kty' },
+      })
+
+      assert.deepStrictEqual(
+        doc.safeDereferenceToVerificationMethod('did:example:bar#01')?.toJSON(),
+        {
+          id: 'did:example:bar#01',
+          type: 'some-type',
+          controller: 'did:example:bar',
+          publicKeyJwk: { kty: 'some-kty' },
+        }
+      )
+    })
+
+    it('should dereference safely to undefined if the verification method does not exist', () => {
+      const doc = new DidDocument({
+        id: 'did:example:bar',
+      })
+
+      assert.strictEqual(
+        doc.safeDereferenceToVerificationMethod('did:example:bar#01'),
+        undefined
+      )
+    })
+
+    it('should not dereference if the verification method does not exist', () => {
+      assert.throws(() => {
+        const doc = new DidDocument({
+          id: 'did:example:bar',
+        })
+        doc.dereferenceToVerificationMethod('did:example:bar#01')
+      }, DidDocumentError)
+    })
+  })
 })
