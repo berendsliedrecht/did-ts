@@ -93,7 +93,7 @@ export class DidDocument {
     this.service = parsed.service
   }
 
-  public dereferenceToVerificationMethod(didUrl: z.input<typeof stringOrDid>) {
+  public findVerificationMethodByDidUrl(didUrl: z.input<typeof stringOrDid>) {
     const did = stringOrDid.parse(didUrl)
 
     const verificationMethod = this.verificationMethod?.find(
@@ -109,11 +109,11 @@ export class DidDocument {
     return verificationMethod
   }
 
-  public safeDereferenceToVerificationMethod(
+  public safeFindToVerificationMethodByDidUrl(
     didUrl: z.input<typeof stringOrDid>
   ) {
     try {
-      return this.dereferenceToVerificationMethod(didUrl)
+      return this.findVerificationMethodByDidUrl(didUrl)
     } catch {
       return undefined
     }

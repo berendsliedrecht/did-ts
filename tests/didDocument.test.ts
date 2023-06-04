@@ -197,7 +197,7 @@ describe('Did Document', () => {
   })
 
   describe('Dereferencing to verification method', () => {
-    it('should dereference correctly to the associated verification method', () => {
+    it('should find correctly to the associated verification method', () => {
       const doc = new DidDocument({
         id: 'did:example:bar',
       }).addVerificationMethod({
@@ -208,7 +208,7 @@ describe('Did Document', () => {
       })
 
       assert.deepStrictEqual(
-        doc.dereferenceToVerificationMethod('did:example:bar#01').toJSON(),
+        doc.findVerificationMethodByDidUrl('did:example:bar#01').toJSON(),
         {
           id: 'did:example:bar#01',
           type: 'some-type',
@@ -218,7 +218,7 @@ describe('Did Document', () => {
       )
     })
 
-    it('should dereference safely to the associated verification method', () => {
+    it('should find safely to the associated verification method', () => {
       const doc = new DidDocument({
         id: 'did:example:bar',
       }).addVerificationMethod({
@@ -229,7 +229,9 @@ describe('Did Document', () => {
       })
 
       assert.deepStrictEqual(
-        doc.safeDereferenceToVerificationMethod('did:example:bar#01')?.toJSON(),
+        doc
+          .safeFindToVerificationMethodByDidUrl('did:example:bar#01')
+          ?.toJSON(),
         {
           id: 'did:example:bar#01',
           type: 'some-type',
@@ -239,23 +241,23 @@ describe('Did Document', () => {
       )
     })
 
-    it('should dereference safely to undefined if the verification method does not exist', () => {
+    it('should find safely to undefined if the verification method does not exist', () => {
       const doc = new DidDocument({
         id: 'did:example:bar',
       })
 
       assert.strictEqual(
-        doc.safeDereferenceToVerificationMethod('did:example:bar#01'),
+        doc.safeFindToVerificationMethodByDidUrl('did:example:bar#01'),
         undefined
       )
     })
 
-    it('should not dereference if the verification method does not exist', () => {
+    it('should not find if the verification method does not exist', () => {
       assert.throws(() => {
         const doc = new DidDocument({
           id: 'did:example:bar',
         })
-        doc.dereferenceToVerificationMethod('did:example:bar#01')
+        doc.findVerificationMethodByDidUrl('did:example:bar#01')
       }, DidDocumentError)
     })
   })
