@@ -30,6 +30,25 @@ describe('Did Document', () => {
       )
     })
 
+    it('should error when providing both a `publicKeyJwk` and `publicKeyMultibase` in a verification method', () => {
+      assert.throws(
+        () =>
+          new DidDocument({
+            id: 'did:example:123',
+            verificationMethod: [
+              {
+                id: 'did:some:id',
+                type: 'verification',
+                controller: 'did:example:123',
+                publicKeyJwk: { kty: 'keyType' },
+                publicKeyMultibase: 'someMultibase',
+              },
+            ],
+          }),
+        ZodError
+      )
+    })
+
     it('should create a more complex did document with the builder', () => {
       const doc = new DidDocument({ id: 'did:example:123' })
         .addService({
