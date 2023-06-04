@@ -1,20 +1,30 @@
 {
   "name": "did-core",
-  "version": "0.0.0",
+  "version": "0.0.1-alpha.2",
   "description": "Implementation of did-core v1.0",
   "license": "MIT",
   "author": "Berend Sliedrecht <blu3beri@proton.me>",
   "main": "build/index.js",
-  "files": ["build"],
+  "files": [
+    "build"
+  ],
   "scripts": {
-    "test": "node --require ts-node/register --test ./tests/*.test.ts"
-  },
-  "devDependencies": {
-    "@types/node": "18.16.16",
-    "ts-node": "^10.9.1",
-    "typescript": "~5.0.4"
+    "clean": "rm -rf build",
+    "clean:deps": "pnpm clean && rm -rf node_modules",
+    "build": "tsc",
+    "test": "node --require ts-node/register --test ./tests/*.test.ts",
+    "check-format": "prettier --list-different",
+    "check-types": "pnpm build --noEmit",
+    "release": "release-it"
   },
   "dependencies": {
     "zod": "3.21.4"
+  },
+  "devDependencies": {
+    "@types/node": "18.16.16",
+    "prettier": "2.8.8",
+    "release-it": "15.10.5",
+    "ts-node": "^10.9.1",
+    "typescript": "~5.0.4"
   }
 }
