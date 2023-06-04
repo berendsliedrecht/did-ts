@@ -366,7 +366,7 @@ export class DidDocument {
       i.toJSON()
 
     const mappedRest = {
-      id: this.id.toJSON(),
+      id: this.id.did,
       alsoKnownAs: this.alsoKnownAs,
       controller:
         this.controller && this.controller instanceof Did

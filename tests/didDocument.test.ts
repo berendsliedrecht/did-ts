@@ -14,6 +14,11 @@ describe('Did Document', () => {
       assert.deepStrictEqual(doc.toJSON(), { id: 'did:example:123' })
     })
 
+    it('should strip URL parts on `id` field', () => {
+      const doc = new DidDocument({ id: 'did:example:123#key-01' })
+      assert.deepStrictEqual(doc.toJSON(), { id: 'did:example:123' })
+    })
+
     it('should create a more complex did document with the builder', () => {
       const doc = new DidDocument({ id: 'did:example:123' })
         .addService({
