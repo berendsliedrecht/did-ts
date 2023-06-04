@@ -19,6 +19,17 @@ describe('Did Document', () => {
       assert.deepStrictEqual(doc.toJSON(), { id: 'did:example:123' })
     })
 
+    it('should error when providing a DID URL for the `controller` field', () => {
+      assert.throws(
+        () =>
+          new DidDocument({
+            id: 'did:example:123',
+            controller: 'did:key:abc/path',
+          }),
+        ZodError
+      )
+    })
+
     it('should create a more complex did document with the builder', () => {
       const doc = new DidDocument({ id: 'did:example:123' })
         .addService({

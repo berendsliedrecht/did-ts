@@ -370,8 +370,8 @@ export class DidDocument {
       alsoKnownAs: this.alsoKnownAs,
       controller:
         this.controller && this.controller instanceof Did
-          ? this.controller?.toJSON()
-          : this.controller?.map((c) => c.toJSON()),
+          ? this.controller?.did
+          : this.controller?.map((c) => c.did),
       verificationMethod: this.verificationMethod?.map((v) => v.toJSON()),
       service: this.service?.map((s) => s.toJSON()),
       assertionMethod: this.assertionMethod?.map(mapStringOrVerificationMethod),

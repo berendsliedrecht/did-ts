@@ -10,13 +10,15 @@ export const serviceSchema = z.object({
   ]),
 })
 
-export const uniqueServicesSchema = z.array(serviceSchema).refine((services) => {
-  const idSet = new Set()
-  for (const obj of services) {
-    if (idSet.has(obj.id)) {
-      return false
+export const uniqueServicesSchema = z
+  .array(serviceSchema)
+  .refine((services) => {
+    const idSet = new Set()
+    for (const obj of services) {
+      if (idSet.has(obj.id)) {
+        return false
+      }
+      idSet.add(obj.id)
     }
-    idSet.add(obj.id)
-  }
-  return true
-}, 'Duplicate service.id found. They must be unique')
+    return true
+  }, 'Duplicate service.id found. They must be unique')

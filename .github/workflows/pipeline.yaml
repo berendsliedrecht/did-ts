@@ -83,4 +83,3 @@ jobs:
           else
             pnpm release ${{ inputs.release-type }}
           fi
-            
