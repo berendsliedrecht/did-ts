@@ -64,5 +64,13 @@ jobs:
       - name: Build
         run: pnpm build
 
+      - name: Initialise the NPM config
+        env:
+          NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
+        run: npm config set //registry.npmjs.org/:_authToken $NPM_TOKEN
+
       - name: Publish
+        env:
+          GITHUB_TOKEN: ${ secrets.GH_TOKEN }
+          NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
         run: pnpm release ${{ github.events.inputs.release-type }}
