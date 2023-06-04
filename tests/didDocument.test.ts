@@ -2,7 +2,7 @@ import { describe, it } from 'node:test'
 import { DID_DOCUMENTS } from './fixtures/didDocuments'
 import assert from 'node:assert'
 import { createDidDocumentConstructTest } from './utils/createDidDocumentConstructTest'
-import { Did, DidDocument, VerificationMethod } from '../src'
+import { Did, DidDocument, VerificationMethod, DidDocumentError } from '../src'
 import { ZodError } from 'zod'
 
 describe('Did Document', () => {
@@ -122,6 +122,27 @@ describe('Did Document', () => {
             }),
         ZodError
       )
+    })
+
+    it('should error when the verification method reference is not inside the verification method', () => {
+      assert.throws(
+        () =>
+          new DidDocument({ id: 'did:foo:bar' }).addAuthentication(
+            'did:example:key#01'
+          ),
+        DidDocumentError
+      )
+    })
+
+    it('should not error when the verification method reference is not inside the verification method, but using unsafe', () => {
+      const doc = new DidDocument({
+        id: 'did:foo:bar',
+      }).addAuthenticationUnsafe('did:example:key#01')
+
+      assert.deepStrictEqual(doc.toJSON(), {
+        id: 'did:foo:bar',
+        authentication: ['did:example:key#01'],
+      })
     })
   })
 })
