@@ -19,6 +19,21 @@ describe('Did Document', () => {
       assert.deepStrictEqual(doc.toJSON(), { id: 'did:example:123' })
     })
 
+    it('should show undefined properties', () => {
+      const doc = new DidDocument({ id: 'did:example:123', someField: 'a' })
+      assert.deepStrictEqual(doc.toJSON(), {
+        id: 'did:example:123',
+        someField: 'a',
+      })
+    })
+
+    it('should not show undefined properties, if specified inside the toJSON method', () => {
+      const doc = new DidDocument({ id: 'did:example:123', someField: 'a' })
+      assert.deepStrictEqual(doc.toJSON(['someField']), {
+        id: 'did:example:123',
+      })
+    })
+
     it('should error when providing a DID URL for the `controller` field', () => {
       assert.throws(
         () =>
