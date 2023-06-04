@@ -5,6 +5,7 @@
   "license": "MIT",
   "author": "Berend Sliedrecht <blu3beri@proton.me>",
   "main": "build/index.js",
+  "files": ["build"],
   "scripts": {
     "test": "node --require ts-node/register --test ./tests/*.test.ts"
   },
