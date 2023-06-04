@@ -23,7 +23,7 @@ type VerificationMethodOrDidOrString =
   | Did
   | string
 
-export type DidDocumentOptions = Modify<
+export type DidDocumentOptions<T extends Record<string, unknown> = {}> = Modify<
   z.input<typeof didDocumentSchema>,
   {
     verificationMethod?: Array<VerificationMethodOptions>
@@ -35,7 +35,8 @@ export type DidDocumentOptions = Modify<
     service?: Array<ServiceOptions | Service>
   }
 > &
-  Record<string, unknown>
+  Record<string, unknown> &
+  T
 
 type MakePropertyRequired<T, K extends keyof T> = T & Required<Pick<T, K>>
 type ReturnBuilderWithAlsoKnownAs<T extends DidDocument> = MakePropertyRequired<

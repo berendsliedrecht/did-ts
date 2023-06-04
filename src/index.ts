@@ -6,4 +6,7 @@ export * from './publicKeyJwk'
 export * from './publicKeyMultibase'
 export * from './error'
 
+export * from './didResolution'
+export * from './didUrlDereference'
+
 export * from './schemas'
