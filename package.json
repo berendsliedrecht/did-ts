@@ -1,11 +1,13 @@
 {
   "name": "did-core",
-  "version": "0.0.0",
+  "version": "0.0.1-0",
   "description": "Implementation of did-core v1.0",
   "license": "MIT",
   "author": "Berend Sliedrecht <blu3beri@proton.me>",
   "main": "build/index.js",
-  "files": ["build"],
+  "files": [
+    "build"
+  ],
   "scripts": {
     "clean": "rm -rf build",
     "clean:deps": "pnpm clean && rm -rf node_modules",
