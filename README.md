@@ -9,9 +9,7 @@ The main design goal of this library is to be unopinionated and extendible by
 the consumer. Unopinionated in this sense means that the library does not
 enforce a specific ideology to use it. Extendible means that the consumer of
 this library can use this as a base on which they can build more use-case
-specific functionality. For example, it is possible for the user to provide
-their own [JWK](https://datatracker.ietf.org/doc/html/rfc7517). This class is
-used to parse into from the DID Document.
+specific functionality.
 
 Another goal is to provide as much utility as possible regarding the main data
 types (DIDs and DID Documents). By adding this, it allows the consumer to
