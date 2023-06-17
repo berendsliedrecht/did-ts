@@ -2,7 +2,13 @@ import { describe, it } from 'node:test'
 import { DID_DOCUMENTS } from './fixtures/didDocuments'
 import assert from 'node:assert'
 import { createDidDocumentConstructTest } from './utils/createDidDocumentConstructTest'
-import { Did, DidDocument, VerificationMethod, DidDocumentError } from '../src'
+import {
+  Did,
+  DidDocument,
+  VerificationMethod,
+  DidDocumentError,
+  didDocumentSchema,
+} from '../src'
 import { ZodError } from 'zod'
 
 describe('Did Document', () => {
@@ -259,6 +265,143 @@ describe('Did Document', () => {
         })
         doc.findVerificationMethodByDidUrl('did:example:bar#01')
       }, DidDocumentError)
+    })
+  })
+
+  describe('Finding items in the did Document', () => {
+    it('should find the service by type', () => {
+      const doc = new DidDocument({ id: 'did:example:123' }).addService({
+        id: 'did:example:123#service-1',
+        type: 'some-type',
+        serviceEndpoint: 'https://example.org',
+      })
+
+      assert.deepStrictEqual(doc.findServiceByType('some-type').toJSON(), {
+        id: 'did:example:123#service-1',
+        type: 'some-type',
+        serviceEndpoint: 'https://example.org',
+      })
+    })
+
+    it('should find the service by id', () => {
+      const doc = new DidDocument({ id: 'did:example:123' }).addService({
+        id: 'did:example:123#service-1',
+        type: 'some-type',
+        serviceEndpoint: 'https://example.org',
+      })
+
+      assert.deepStrictEqual(
+        doc.findServiceById('did:example:123#service-1').toJSON(),
+        {
+          id: 'did:example:123#service-1',
+          type: 'some-type',
+          serviceEndpoint: 'https://example.org',
+        }
+      )
+    })
+
+    it('should not find the service if the type does not exist', () => {
+      const doc = new DidDocument({ id: 'did:example:123' }).addService({
+        id: 'did:example:123#service-1',
+        type: 'some-type',
+        serviceEndpoint: 'https://example.org',
+      })
+
+      assert.throws(
+        () => doc.findServiceByType('some-other-type'),
+        DidDocumentError
+      )
+    })
+
+    it('should not find the service if the id does not exist', () => {
+      const doc = new DidDocument({ id: 'did:example:123' }).addService({
+        id: 'did:example:123#service-1',
+        type: 'some-type',
+        serviceEndpoint: 'https://example.org',
+      })
+
+      assert.throws(
+        () => doc.findServiceById('did:example:123#service-2'),
+        DidDocumentError
+      )
+    })
+
+    it('should find the verification method by purpose and type', () => {
+      const doc = new DidDocument({ id: 'did:example:123' }).addKeyAgreement({
+        id: 'did:example:123#key-1',
+        type: 'some-type',
+        controller: 'did:example:123',
+      })
+
+      assert.deepStrictEqual(
+        doc
+          .findVerificationMethodByTypeAndPurpose('some-type', 'keyAgreement')
+          .toJSON(),
+        {
+          id: 'did:example:123#key-1',
+          type: 'some-type',
+          controller: 'did:example:123',
+        }
+      )
+    })
+
+    it('should find the verification method by purpose and type with reference', () => {
+      const doc = new DidDocument({ id: 'did:example:123' })
+        .addVerificationMethod({
+          id: 'did:example:123#key-1',
+          type: 'some-type',
+          controller: 'did:example:123',
+        })
+        .addKeyAgreement('did:example:123#key-1')
+
+      assert.deepStrictEqual(
+        doc
+          .findVerificationMethodByTypeAndPurpose('some-type', 'keyAgreement')
+          .toJSON(),
+        {
+          id: 'did:example:123#key-1',
+          type: 'some-type',
+          controller: 'did:example:123',
+        }
+      )
+    })
+
+    it('should not find the verification method if the type does not exist', () => {
+      const doc = new DidDocument({
+        id: 'did:example:123',
+      }).addVerificationMethod({
+        id: 'did:example:123#key-1',
+        type: 'some-type',
+        controller: 'did:example:123',
+      })
+
+      assert.throws(
+        () =>
+          doc.findVerificationMethodByTypeAndPurpose(
+            'some-other-type',
+            'verificationMethod'
+          ),
+        DidDocumentError
+      )
+    })
+
+    it('should not find the verification method if the purpose does not match', () => {
+      const doc = new DidDocument({
+        id: 'did:example:123',
+      }).addCapabilityDelegation({
+        id: 'did:example:123#key-1',
+        type: 'some-type',
+        controller: 'did:example:123',
+      })
+
+      assert.throws(
+        () =>
+          doc.findVerificationMethodByTypeAndPurpose(
+            'some-type',
+            'keyAgreement'
+          ),
+        DidDocumentError
+      )
     })
   })
 })

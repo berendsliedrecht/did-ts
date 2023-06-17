@@ -362,13 +362,111 @@ export class DidDocument {
     return newItem
   }
 
+  public findServiceByType(type: string): Service {
+    const service = this.service?.find((s) =>
+      (typeof s.type === 'string' ? [s.type] : s.type).includes(type)
+    )
+
+    if (!service) {
+      throw new DidDocumentError(`Service not found for type '${type}'`)
+    }
+
+    return service
+  }
+
+  public safeFindServiceByType(type: string): Service | undefined {
+    try {
+      return this.findServiceByType(type)
+    } catch {
+      return undefined
+    }
+  }
+
+  public findServiceById(id: string): Service {
+    const service = this.service?.find((s) => s.id === id)
+
+    if (!service) {
+      throw new DidDocumentError(`Service not found with id '${id}'`)
+    }
+
+    return service
+  }
+
+  public safeFindServiceById(id: string): Service | undefined {
+    try {
+      return this.findServiceById(id)
+    } catch {
+      return undefined
+    }
+  }
+
+  public findVerificationMethodByTypeAndPurpose(
+    type: string,
+    purpose:
+      | 'authentication'
+      | 'keyAgreement'
+      | 'assertionMethod'
+      | 'capabilityInvocation'
+      | 'capabilityDelegation'
+      | 'verificationMethod' = 'verificationMethod'
+  ): VerificationMethod {
+    const field =
+      purpose === 'authentication'
+        ? this.authentication
+        : purpose === 'keyAgreement'
+        ? this.keyAgreement
+        : purpose === 'assertionMethod'
+        ? this.assertionMethod
+        : purpose === 'capabilityInvocation'
+        ? this.capabilityInvocation
+        : purpose === 'capabilityDelegation'
+        ? this.capabilityInvocation
+        : this.verificationMethod
+
+    if (!field) {
+      throw new DidDocumentError(
+        `Purpose '${purpose}' does not exist inside the did document`
+      )
+    }
+
+    const vm = field
+      .map((f) =>
+        f instanceof Did ? this.safeFindToVerificationMethodByDidUrl(f) : f
+      )
+      .find((vm) => vm?.type === type)
+
+    if (!vm) {
+      throw new DidDocumentError(
+        `Purpose '${purpose}' does not have a field with type '${type}'`
+      )
+    }
+
+    return vm
+  }
+
+  public safeFindVerificationMethodByTypeAndPurpose(
+    type: string,
+    purpose:
+      | 'authentication'
+      | 'keyAgreement'
+      | 'assertionMethod'
+      | 'capabilityInvocation'
+      | 'capabilityDelegation'
+      | 'verificationMethod' = 'verificationMethod'
+  ): VerificationMethod | undefined {
+    try {
+      return this.findVerificationMethodByTypeAndPurpose(type, purpose)
+    } catch {
+      return undefined
+    }
+  }
+
   public toJSON(omitKeys?: Array<string>): Record<string, unknown> {
     const mapStringOrVerificationMethod = (i: Did | VerificationMethod) =>
       i.toJSON()
 
     const omitBase = ['fullDocument']
     const omitKeysWithBase = omitKeys ? [...omitBase, ...omitKeys] : omitBase
-    console.log(omitKeysWithBase)
 
     const mappedRest = {
       ...this.fullDocument,
