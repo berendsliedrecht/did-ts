@@ -20,7 +20,7 @@ export enum ServiceTypes {
    * sent to the URI formed by appending the credentialSubject.id as a
    * URL-encoded string to the given endpoint URI, the registry MUST return an
    * array of verifiable credentials associated with the subject ID. A sample
-   * registry endpoint can be found here.
+   * registry endpoint can be found {@link https://ssi.eecc.de/api/registry/swagger/#/Credentials/get_api_registry_vcs__id_ | here}.
    */
   CredentialRegistry = 'CredentialRegistry',
 }
