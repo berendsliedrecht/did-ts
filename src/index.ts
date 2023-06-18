@@ -7,6 +7,7 @@ export * from './publicKeyMultibase'
 export * from './error'
 export * from './verificationMethodTypes'
 export * from './serviceTypes'
+export * from './representations'
 
 export * from './didResolution'
 export * from './didUrlDereference'

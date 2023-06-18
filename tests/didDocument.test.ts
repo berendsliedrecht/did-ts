@@ -7,7 +7,8 @@ import {
   DidDocument,
   VerificationMethod,
   DidDocumentError,
-  didDocumentSchema,
+  VerificationMethodTypes,
+  ServiceTypes,
 } from '../src'
 import { ZodError } from 'zod'
 
@@ -402,6 +403,108 @@ describe('Did Document', () => {
           ),
         DidDocumentError
       )
+    })
+  })
+
+  describe('validate the registered types for verification methods and services', () => {
+    it('should validate a correct type of a verification method by id', () => {
+      const doc = new DidDocument({
+        id: 'did:example:123',
+        verificationMethod: [
+          {
+            id: 'did:example:123#key-1',
+            type: VerificationMethodTypes.JsonWebKey2020,
+            controller: 'did:example:123',
+          },
+        ],
+      })
+
+      assert(doc.isVerificationMethodTypeRegistered('did:example:123#key-1'))
+    })
+
+    it('should validate an custom added type of a verification method by id', () => {
+      const doc = new DidDocument({
+        id: 'did:example:123',
+        verificationMethod: [
+          {
+            id: 'did:example:123#key-1',
+            type: 'some-added-type',
+            controller: 'did:example:123',
+          },
+        ],
+      })
+
+      assert(
+        doc.isVerificationMethodTypeRegistered(
+          'did:example:123#key-1',
+          'some-added-type'
+        )
+      )
+    })
+
+    it('should not validate an incorrect type of a verification method by id', () => {
+      const doc = new DidDocument({
+        id: 'did:example:123',
+        verificationMethod: [
+          {
+            id: 'did:example:123#key-1',
+            type: 'some-incorrect-type',
+            controller: 'did:example:123',
+          },
+        ],
+      })
+
+      assert(
+        doc.isVerificationMethodTypeRegistered('did:example:123#key-1') ===
+          false
+      )
+    })
+
+    it('should validate a correct type of a service by id', () => {
+      const doc = new DidDocument({
+        id: 'did:example:123',
+        service: [
+          {
+            id: 'did:example:some:id',
+            type: ServiceTypes.LinkedDomains,
+            serviceEndpoint: 'https://example.org',
+          },
+        ],
+      })
+
+      assert(doc.isServiceTypeRegistered('did:example:some:id'))
+    })
+
+    it('should validate a correct type of a service by id', () => {
+      const doc = new DidDocument({
+        id: 'did:example:123',
+        service: [
+          {
+            id: 'did:example:some:id',
+            type: 'some-added-type',
+            serviceEndpoint: 'https://example.org',
+          },
+        ],
+      })
+
+      assert(
+        doc.isServiceTypeRegistered('did:example:some:id', 'some-added-type')
+      )
+    })
+
+    it('should not validate an incorrect type of a service by id', () => {
+      const doc = new DidDocument({
+        id: 'did:example:123',
+        service: [
+          {
+            id: 'did:example:some:id',
+            type: 'some-bad-type',
+            serviceEndpoint: 'https://example.org',
+          },
+        ],
+      })
+
+      assert(doc.isServiceTypeRegistered('did:example:some:id') === false)
     })
   })
 })
