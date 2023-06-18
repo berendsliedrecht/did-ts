@@ -130,3 +130,9 @@ const maybeVerificationMethod = didDocument.safeFindVerificationMethodByDidUrl(
   'did:example:org#key-01'
 ) // returns undefined if not found
 ```
+
+## Future work
+
+There is no functionality added yet specifically for JSON-LD. The `@context`
+field may be supplied to the DID Document, but it will not resolve and validate
+the URLs.
