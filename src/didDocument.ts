@@ -461,6 +461,24 @@ export class DidDocument {
     }
   }
 
+  public isVerificationMethodTypeRegistered(
+    id: Did | string,
+    additionalAcceptedTypes: string | Array<string> = []
+  ): boolean {
+    const vm = this.findVerificationMethodByDidUrl(id)
+
+    return vm.isTypeInDidSpecRegistry(additionalAcceptedTypes)
+  }
+
+  public isServiceTypeRegistered(
+    id: string,
+    additionalAcceptedTypes: string | Array<string> = []
+  ): boolean {
+    const service = this.findServiceById(id)
+
+    return service.isTypeInDidSpecRegistry(additionalAcceptedTypes)
+  }
+
   public toJSON(omitKeys?: Array<string>): Record<string, unknown> {
     const mapStringOrVerificationMethod = (i: Did | VerificationMethod) =>
       i.toJSON()

@@ -5,6 +5,8 @@ export * from './service'
 export * from './publicKeyJwk'
 export * from './publicKeyMultibase'
 export * from './error'
+export * from './verificationMethodTypes'
+export * from './serviceTypes'
 
 export * from './didResolution'
 export * from './didUrlDereference'
