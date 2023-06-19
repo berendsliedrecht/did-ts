@@ -1,8 +1,5 @@
+import { Impossible, OrPromise } from './types'
 import { DidDocumentOptions } from './didDocument'
-
-type Impossible<T, K extends keyof T> = Omit<T, K> & { [P in K]: never }
-
-type OrPromise<T> = T | Promise<T>
 
 export type ResolutionOptions<T extends Record<string, unknown>> = {
   accept: string

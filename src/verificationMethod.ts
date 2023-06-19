@@ -1,4 +1,4 @@
-import type { Modify } from './utils'
+import type { Modify } from './types'
 import { verificationMethodSchema } from './schemas'
 import { Did } from './did'
 import { z } from 'zod'

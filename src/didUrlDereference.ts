@@ -1,4 +1,4 @@
-type OrPromise<T> = T | Promise<T>
+import { OrPromise } from './types'
 
 export type DereferenceOptions<T extends Record<string, unknown>> = {
   accept?: string

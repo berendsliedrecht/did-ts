@@ -13,7 +13,7 @@ import {
   uniqueVerificationMethodsSchema,
 } from './schemas'
 import { DidDocumentError } from './error'
-import { Modify } from './utils'
+import { MakePropertyRequired, Modify } from './types'
 
 type DidOrVerificationMethodArray = Array<VerificationMethodOrDidOrString>
 
@@ -38,7 +38,6 @@ export type DidDocumentOptions<T extends Record<string, unknown> = {}> = Modify<
   Record<string, unknown> &
   T
 
-type MakePropertyRequired<T, K extends keyof T> = T & Required<Pick<T, K>>
 type ReturnBuilderWithAlsoKnownAs<T extends DidDocument> = MakePropertyRequired<
   T,
   'alsoKnownAs'
