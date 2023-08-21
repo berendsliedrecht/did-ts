@@ -17,7 +17,7 @@ export const verificationMethodSchema = z
       publicKeyMultibase: z.optional(publicKeyMultibaseSchema),
     }),
     z.custom<VerificationMethod>(
-      (verificationMethod) => verificationMethod instanceof VerificationMethod
+      (verificationMethod) => verificationMethod instanceof VerificationMethod,
     ),
   ])
   .superRefine((data, ctx) => {

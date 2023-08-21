@@ -121,13 +121,13 @@ const didDocument = new DidDocument({
 })
 
 const verificationMethod = didDocument.findVerificationMethodByDidUrl(
-  'did:example:org#key-01'
+  'did:example:org#key-01',
 ) // errors if not found
 
 // or
 
 const maybeVerificationMethod = didDocument.safeFindVerificationMethodByDidUrl(
-  'did:example:org#key-01'
+  'did:example:org#key-01',
 ) // returns undefined if not found
 ```
 

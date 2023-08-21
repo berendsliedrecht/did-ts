@@ -3,7 +3,7 @@ import assert from 'node:assert'
 import { it } from 'node:test'
 
 export const createDidDocumentConstructTest = (
-  didDocument: DidDocumentOptions
+  didDocument: DidDocumentOptions,
 ) =>
   it(`should construct the did document for ${didDocument.id}`, () => {
     const instance = new DidDocument(didDocument)

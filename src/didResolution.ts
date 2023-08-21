@@ -26,14 +26,14 @@ export interface DidResolution<
   AdditionalOptions extends Record<string, unknown> = {},
   AdditionalDidResolutionMetadata extends Record<string, unknown> = {},
   AdditionalDidDocument extends Record<string, unknown> = {},
-  AdditionalDidDocumentMetadata extends Record<string, unknown> = {}
+  AdditionalDidDocumentMetadata extends Record<string, unknown> = {},
 > {
   resolve(
     did: string,
     resolutionOptions?: Impossible<
       ResolutionOptions<AdditionalOptions>,
       'accept'
-    >
+    >,
   ): OrPromise<{
     didResolutionMetadata: Impossible<
       DidResolutionMetadata<AdditionalDidResolutionMetadata>,
@@ -45,7 +45,7 @@ export interface DidResolution<
 
   resolvePresentation(
     did: string,
-    resolutionOptions?: ResolutionOptions<AdditionalOptions>
+    resolutionOptions?: ResolutionOptions<AdditionalOptions>,
   ): OrPromise<{
     didResolutionMetadata: DidResolutionMetadata<AdditionalDidResolutionMetadata>
     didDocumentStream: Uint8Array

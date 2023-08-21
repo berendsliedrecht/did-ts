@@ -48,7 +48,7 @@ describe('Did Document', () => {
             id: 'did:example:123',
             controller: 'did:key:abc/path',
           }),
-        ZodError
+        ZodError,
       )
     })
 
@@ -67,7 +67,7 @@ describe('Did Document', () => {
               },
             ],
           }),
-        ZodError
+        ZodError,
       )
     })
 
@@ -98,7 +98,7 @@ describe('Did Document', () => {
             id: 'did:some:id',
             type: 'some-type',
             controller: 'did:me:duh',
-          })
+          }),
         )
         .addCapabilityInvocationUnsafe('did:me:duh')
         .addAssertionMethod({
@@ -159,7 +159,7 @@ describe('Did Document', () => {
               type: 'some-type',
               serviceEndpoint: 'https://github.com',
             }),
-        ZodError
+        ZodError,
       )
     })
 
@@ -177,7 +177,7 @@ describe('Did Document', () => {
               type: 'some-type',
               controller: 'did:foo:bar',
             }),
-        ZodError
+        ZodError,
       )
     })
 
@@ -185,9 +185,9 @@ describe('Did Document', () => {
       assert.throws(
         () =>
           new DidDocument({ id: 'did:foo:bar' }).addAuthentication(
-            'did:example:key#01'
+            'did:example:key#01',
           ),
-        DidDocumentError
+        DidDocumentError,
       )
     })
 
@@ -221,7 +221,7 @@ describe('Did Document', () => {
           type: 'some-type',
           controller: 'did:example:bar',
           publicKeyJwk: { kty: 'some-kty' },
-        }
+        },
       )
     })
 
@@ -244,7 +244,7 @@ describe('Did Document', () => {
           type: 'some-type',
           controller: 'did:example:bar',
           publicKeyJwk: { kty: 'some-kty' },
-        }
+        },
       )
     })
 
@@ -255,7 +255,7 @@ describe('Did Document', () => {
 
       assert.strictEqual(
         doc.safeFindToVerificationMethodByDidUrl('did:example:bar#01'),
-        undefined
+        undefined,
       )
     })
 
@@ -297,7 +297,7 @@ describe('Did Document', () => {
           id: 'did:example:123#service-1',
           type: 'some-type',
           serviceEndpoint: 'https://example.org',
-        }
+        },
       )
     })
 
@@ -310,7 +310,7 @@ describe('Did Document', () => {
 
       assert.throws(
         () => doc.findServiceByType('some-other-type'),
-        DidDocumentError
+        DidDocumentError,
       )
     })
 
@@ -323,7 +323,7 @@ describe('Did Document', () => {
 
       assert.throws(
         () => doc.findServiceById('did:example:123#service-2'),
-        DidDocumentError
+        DidDocumentError,
       )
     })
 
@@ -342,7 +342,7 @@ describe('Did Document', () => {
           id: 'did:example:123#key-1',
           type: 'some-type',
           controller: 'did:example:123',
-        }
+        },
       )
     })
 
@@ -363,7 +363,7 @@ describe('Did Document', () => {
           id: 'did:example:123#key-1',
           type: 'some-type',
           controller: 'did:example:123',
-        }
+        },
       )
     })
 
@@ -380,9 +380,9 @@ describe('Did Document', () => {
         () =>
           doc.findVerificationMethodByTypeAndPurpose(
             'some-other-type',
-            'verificationMethod'
+            'verificationMethod',
           ),
-        DidDocumentError
+        DidDocumentError,
       )
     })
 
@@ -399,9 +399,9 @@ describe('Did Document', () => {
         () =>
           doc.findVerificationMethodByTypeAndPurpose(
             'some-type',
-            'keyAgreement'
+            'keyAgreement',
           ),
-        DidDocumentError
+        DidDocumentError,
       )
     })
   })
@@ -437,8 +437,8 @@ describe('Did Document', () => {
       assert(
         doc.isVerificationMethodTypeRegistered(
           'did:example:123#key-1',
-          'some-added-type'
-        )
+          'some-added-type',
+        ),
       )
     })
 
@@ -456,7 +456,7 @@ describe('Did Document', () => {
 
       assert(
         doc.isVerificationMethodTypeRegistered('did:example:123#key-1') ===
-          false
+          false,
       )
     })
 
@@ -488,7 +488,7 @@ describe('Did Document', () => {
       })
 
       assert(
-        doc.isServiceTypeRegistered('did:example:some:id', 'some-added-type')
+        doc.isServiceTypeRegistered('did:example:some:id', 'some-added-type'),
       )
     })
 

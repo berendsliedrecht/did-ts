@@ -45,7 +45,7 @@ export class VerificationMethod {
    *
    */
   public isTypeInDidSpecRegistry(
-    additionalAcceptedTypes: string | Array<string> = []
+    additionalAcceptedTypes: string | Array<string> = [],
   ): boolean {
     const additionalAcceptedTypesArray =
       typeof additionalAcceptedTypes === 'string'
@@ -68,7 +68,7 @@ export class VerificationMethod {
       publicKeyMultibase: this.publicKeyMultibase?.toJSON(),
     }
     const cleanedRest = Object.fromEntries(
-      Object.entries(mappedRest).filter(([_, value]) => value !== undefined)
+      Object.entries(mappedRest).filter(([_, value]) => value !== undefined),
     )
 
     return cleanedRest

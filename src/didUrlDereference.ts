@@ -13,11 +13,11 @@ export interface DidUrlDereference<
   AdditionalDereferenceOptions extends Record<string, unknown> = {},
   AdditionalDereferencingMetadata extends Record<string, unknown> = {},
   ContentStream = unknown,
-  ContentMetadata extends Record<string, unknown> = {}
+  ContentMetadata extends Record<string, unknown> = {},
 > {
   dereference(
     didUrl: string,
-    dereferenceOptions: DereferenceOptions<AdditionalDereferenceOptions>
+    dereferenceOptions: DereferenceOptions<AdditionalDereferenceOptions>,
   ): OrPromise<{
     dereferencingMetadata: DereferencingMetadata<AdditionalDereferencingMetadata>
     contentStream?: ContentStream

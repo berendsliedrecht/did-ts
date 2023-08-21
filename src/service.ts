@@ -26,7 +26,7 @@ export class Service {
    *
    */
   public isTypeInDidSpecRegistry(
-    additionalAcceptedTypes: string | Array<string> = []
+    additionalAcceptedTypes: string | Array<string> = [],
   ): boolean {
     const additionalAcceptedTypesArray =
       typeof additionalAcceptedTypes === 'string'
@@ -34,7 +34,7 @@ export class Service {
         : additionalAcceptedTypes
 
     const allTypes = (Object.values(ServiceTypes) as Array<string>).concat(
-      additionalAcceptedTypesArray
+      additionalAcceptedTypesArray,
     )
 
     return typeof this.type === 'string'

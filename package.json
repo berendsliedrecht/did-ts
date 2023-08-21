@@ -5,9 +5,7 @@
   "license": "MIT",
   "author": "Berend Sliedrecht <blu3beri@proton.me>",
   "main": "build/index.js",
-  "files": [
-    "build"
-  ],
+  "files": ["build"],
   "scripts": {
     "clean": "rm -rf build",
     "clean:deps": "pnpm clean && rm -rf node_modules",
@@ -20,13 +18,13 @@
     "release": "release-it"
   },
   "dependencies": {
-    "zod": "3.21.4"
+    "zod": "^3.22.1"
   },
   "devDependencies": {
     "@types/node": "18.16.16",
-    "prettier": "2.8.8",
-    "release-it": "15.10.5",
+    "prettier": "^3.0.2",
+    "release-it": "^16.1.5",
     "ts-node": "^10.9.1",
-    "typescript": "~5.0.4"
+    "typescript": "~5.1.6"
   }
 }

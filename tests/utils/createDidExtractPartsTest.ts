@@ -4,7 +4,7 @@ import { Did, DidParts, DidUrlParts } from '../../src'
 
 export const createDidExtractPartsTest = (
   did: string,
-  expectedParts: DidParts
+  expectedParts: DidParts,
 ) => {
   it(`should extract did parts from ${did}`, () => {
     assert.deepStrictEqual(new Did(did).didParts, expectedParts)
@@ -13,7 +13,7 @@ export const createDidExtractPartsTest = (
 
 export const createDidExtractUrlPartsTest = (
   did: string,
-  expectedUrlParts: DidUrlParts
+  expectedUrlParts: DidUrlParts,
 ) => {
   it(`should extract did url parts from ${did}`, () => {
     assert.deepStrictEqual(new Did(did).didUrlParts, expectedUrlParts)

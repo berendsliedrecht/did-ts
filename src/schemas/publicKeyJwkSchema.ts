@@ -18,10 +18,10 @@ export const publicKeyJwkSchema = z.union([
       z.undefined({
         invalid_type_error:
           "'d' is not allowed to be supplied as it contains a private key material",
-      })
+      }),
     ),
   }),
   z.custom<PublicKeyJwk>(
-    (publicKeyJwk) => publicKeyJwk instanceof PublicKeyJwk
+    (publicKeyJwk) => publicKeyJwk instanceof PublicKeyJwk,
   ),
 ])

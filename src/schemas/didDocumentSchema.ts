@@ -15,19 +15,19 @@ export const didDocumentSchema = z
     controller: z.optional(z.union([stringOrDid, z.array(stringOrDid)])),
     verificationMethod: z.optional(z.array(verificationMethodSchema)),
     authentication: z.optional(
-      uniqueStringOrVerificationMethodsSchema('authentication')
+      uniqueStringOrVerificationMethodsSchema('authentication'),
     ),
     assertionMethod: z.optional(
-      uniqueStringOrVerificationMethodsSchema('assertionMethod')
+      uniqueStringOrVerificationMethodsSchema('assertionMethod'),
     ),
     keyAgreement: z.optional(
-      uniqueStringOrVerificationMethodsSchema('keyAgreement')
+      uniqueStringOrVerificationMethodsSchema('keyAgreement'),
     ),
     capabilityInvocation: z.optional(
-      uniqueStringOrVerificationMethodsSchema('capabilityInvocation')
+      uniqueStringOrVerificationMethodsSchema('capabilityInvocation'),
     ),
     capabilityDelegation: z.optional(
-      uniqueStringOrVerificationMethodsSchema('capabilityInvocation')
+      uniqueStringOrVerificationMethodsSchema('capabilityInvocation'),
     ),
     service: z.optional(uniqueServicesSchema),
   })
@@ -35,6 +35,6 @@ export const didDocumentSchema = z
     ...didDocument,
     service: didDocument.service?.map((s) => new Service(s)),
     verificationMethod: didDocument.verificationMethod?.map(
-      (v) => new VerificationMethod(v)
+      (v) => new VerificationMethod(v),
     ),
   }))
