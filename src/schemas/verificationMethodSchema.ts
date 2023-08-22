@@ -72,7 +72,7 @@ export const uniqueStringOrVerificationMethodsSchema = (name: string) =>
   z.array(stringOrVerificationMethod).refine((verificationMethods) => {
     const idSet = new Set()
     for (const obj of verificationMethods) {
-      const id = obj instanceof Did ? obj.toUrl() : obj.id.toUrl()
+      const id = obj instanceof Did ? obj.didUrl : obj.id.didUrl
       if (idSet.has(id)) {
         return false
       }

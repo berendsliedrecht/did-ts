@@ -49,7 +49,7 @@ export class Did {
         did.indexOf(PREFIX_PATH),
         did.indexOf(PREFIX_QUERY),
         did.indexOf(PREFIX_FRAGMENT),
-      ].filter((i) => i !== -1),
+      ].filter((i) => i !== -1)
     )
 
     const didBase = stripUntil !== -1 ? did.slice(0, stripUntil) : did
@@ -72,7 +72,7 @@ export class Did {
       queryParams.size > 0
         ? [...queryParams.entries()].reduce(
             (prev, [k, v]) => ({ [k]: v, ...prev }) as Record<string, string>,
-            {},
+            {}
           )
         : undefined
     this.fragment = fragment.length > 0 ? fragment : undefined
@@ -101,13 +101,13 @@ export class Did {
 
   public validate(): boolean {
     if (this.isDidUrl()) {
-      return Did.validateDidUrl(this.toUrl())
+      return Did.validateDidUrl(this.didUrl)
     } else {
       return Did.validateDid(this.did)
     }
   }
 
-  public toUrl(): string {
+  public get didUrl(): string {
     const path = this.path ? `${PREFIX_PATH}${this.path}` : ''
     const queryString = new URLSearchParams(this.query).toString()
     const query = this.query ? `${PREFIX_QUERY}${queryString}` : ''
@@ -181,7 +181,7 @@ export class Did {
 
   public get didUrlParts(): DidUrlParts {
     // This is done because the params are calculated based on the query and parameterKeys, but is you set additional parameter keys later on the new parameter field is not updated
-    const newDid = new Did(this.toUrl(), this.parameterKeys)
+    const newDid = new Did(this.didUrl, this.parameterKeys)
 
     return {
       fragment: newDid.fragment,
@@ -216,7 +216,7 @@ export class Did {
   }
 
   public toString() {
-    return this.toUrl()
+    return this.didUrl
   }
 
   public toJSON() {

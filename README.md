@@ -55,7 +55,7 @@ import { Did } from 'did-core'
 
 const did = new Did('did:example:org#key-01').addPath('some-path')
 
-const didWithPath = did.toUrl()
+const didWithPath = did.didUrl
 ```
 
 ### Did Document class
@@ -84,14 +84,14 @@ done when instantiating the class, or with builder functionality.
 import { DidDocument } from 'did-core'
 
 const didDocument = new DidDocument({
-  id: 'did:example:org',
-  verificationMethod: [
-    {
-      id: 'did:example:org#key-01',
-      type: 'some-type',
-      controller: 'did:example:org',
-    },
-  ],
+    id: 'did:example:org',
+    verificationMethod: [
+        {
+            id: 'did:example:org#key-01',
+            type: 'some-type',
+            controller: 'did:example:org',
+        },
+    ],
 }).addAuthentication('did:example:org#key-01')
 ```
 
@@ -110,24 +110,24 @@ To get the associated verification method from a DID URL, the following method c
 import { DidDocument } from 'did-core'
 
 const didDocument = new DidDocument({
-  id: 'did:example:org',
-  verificationMethod: [
-    {
-      id: 'did:example:org#key-01',
-      type: 'some-type',
-      controller: 'did:example:org',
-    },
-  ],
+    id: 'did:example:org',
+    verificationMethod: [
+        {
+            id: 'did:example:org#key-01',
+            type: 'some-type',
+            controller: 'did:example:org',
+        },
+    ],
 })
 
 const verificationMethod = didDocument.findVerificationMethodByDidUrl(
-  'did:example:org#key-01',
+    'did:example:org#key-01'
 ) // errors if not found
 
 // or
 
 const maybeVerificationMethod = didDocument.safeFindVerificationMethodByDidUrl(
-  'did:example:org#key-01',
+    'did:example:org#key-01'
 ) // returns undefined if not found
 ```
 
