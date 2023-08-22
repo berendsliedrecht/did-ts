@@ -34,7 +34,7 @@ describe('Did', (_) => {
 
       assert.deepStrictEqual(
         did.didUrl,
-        'did:key:abc/some-path?versionId=1#key-1'
+        'did:key:abc/some-path?versionId=1#key-1',
       )
     })
   })
@@ -52,9 +52,9 @@ describe('Did', (_) => {
             expected.urlParts.path ||
               expected.urlParts.query ||
               expected.urlParts.fragment ||
-              expected.urlParts.parameters
-          )
-        )
+              expected.urlParts.parameters,
+          ),
+        ),
       )
     })
   })
@@ -62,13 +62,13 @@ describe('Did', (_) => {
   describe('Extraction', () => {
     describe('Extract did parts', () => {
       Object.entries(DIDS).forEach(([did, expected]) =>
-        createDidExtractPartsTest(did, expected.parts)
+        createDidExtractPartsTest(did, expected.parts),
       )
     })
 
     describe('Extract did url parts', () => {
       Object.entries(DIDS).forEach(([did, expected]) =>
-        createDidExtractUrlPartsTest(did, expected.urlParts)
+        createDidExtractUrlPartsTest(did, expected.urlParts),
       )
     })
   })

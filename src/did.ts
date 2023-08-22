@@ -49,7 +49,7 @@ export class Did {
         did.indexOf(PREFIX_PATH),
         did.indexOf(PREFIX_QUERY),
         did.indexOf(PREFIX_FRAGMENT),
-      ].filter((i) => i !== -1)
+      ].filter((i) => i !== -1),
     )
 
     const didBase = stripUntil !== -1 ? did.slice(0, stripUntil) : did
@@ -72,7 +72,7 @@ export class Did {
       queryParams.size > 0
         ? [...queryParams.entries()].reduce(
             (prev, [k, v]) => ({ [k]: v, ...prev }) as Record<string, string>,
-            {}
+            {},
           )
         : undefined
     this.fragment = fragment.length > 0 ? fragment : undefined

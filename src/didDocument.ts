@@ -97,12 +97,12 @@ export class DidDocument {
     const did = stringOrDid.parse(didUrl)
 
     const verificationMethod = this.verificationMethod?.find(
-      (verificationMethod) => verificationMethod.id.didUrl === did.didUrl
+      (verificationMethod) => verificationMethod.id.didUrl === did.didUrl,
     )
 
     if (!verificationMethod) {
       throw new DidDocumentError(
-        `Verification method for did '${did.toString()}' not found`
+        `Verification method for did '${did.toString()}' not found`,
       )
     }
 
@@ -110,7 +110,7 @@ export class DidDocument {
   }
 
   public safeFindToVerificationMethodByDidUrl(
-    didUrl: z.input<typeof stringOrDid>
+    didUrl: z.input<typeof stringOrDid>,
   ) {
     try {
       return this.findVerificationMethodByDidUrl(didUrl)
@@ -120,7 +120,7 @@ export class DidDocument {
   }
 
   public addAlsoKnownAs(
-    alsoKnownAs: string
+    alsoKnownAs: string,
   ): ReturnBuilderWithAlsoKnownAs<this> {
     if (this.alsoKnownAs) {
       this.alsoKnownAs.push(alsoKnownAs)
@@ -133,7 +133,7 @@ export class DidDocument {
 
   public addController(
     controller: string | Did,
-    asArray = true
+    asArray = true,
   ): ReturnBuilderWithController<this> {
     const instancedController =
       typeof controller === 'string' ? new Did(controller) : controller
@@ -152,7 +152,7 @@ export class DidDocument {
   }
 
   public addVerificationMethod(
-    verificationMethod: VerificationMethodOptions
+    verificationMethod: VerificationMethodOptions,
   ): ReturnBuilderWithVerificationMethod<this> {
     if (this.verificationMethod) {
       this.verificationMethod.push(new VerificationMethod(verificationMethod))
@@ -166,125 +166,125 @@ export class DidDocument {
   }
 
   public addAuthentication(
-    verificationMethodOrDidOrString: VerificationMethodOrDidOrString
+    verificationMethodOrDidOrString: VerificationMethodOrDidOrString,
   ): ReturnBuilderWithAuthentication<this> {
     this.authentication = this.addVerificationMethodOrDidOrString(
       'authentication',
       this.authentication,
-      verificationMethodOrDidOrString
+      verificationMethodOrDidOrString,
     )
 
     return this as ReturnBuilderWithAuthentication<this>
   }
 
   public addAuthenticationUnsafe(
-    verificationMethodOrDidOrString: VerificationMethodOrDidOrString
+    verificationMethodOrDidOrString: VerificationMethodOrDidOrString,
   ): ReturnBuilderWithAuthentication<this> {
     this.authentication = this.addVerificationMethodOrDidOrString(
       'authentication',
       this.authentication,
       verificationMethodOrDidOrString,
-      true
+      true,
     )
 
     return this as ReturnBuilderWithAuthentication<this>
   }
 
   public addKeyAgreement(
-    verificationMethodOrStringOrDid: VerificationMethodOrDidOrString
+    verificationMethodOrStringOrDid: VerificationMethodOrDidOrString,
   ): ReturnBuilderWithKeyAgreementMethod<this> {
     this.keyAgreement = this.addVerificationMethodOrDidOrString(
       'keyAgreement',
       this.keyAgreement,
-      verificationMethodOrStringOrDid
+      verificationMethodOrStringOrDid,
     )
 
     return this as ReturnBuilderWithKeyAgreementMethod<this>
   }
 
   public addKeyAgreementUnsafe(
-    verificationMethodOrStringOrDid: VerificationMethodOrDidOrString
+    verificationMethodOrStringOrDid: VerificationMethodOrDidOrString,
   ): ReturnBuilderWithKeyAgreementMethod<this> {
     this.keyAgreement = this.addVerificationMethodOrDidOrString(
       'keyAgreement',
       this.keyAgreement,
       verificationMethodOrStringOrDid,
-      true
+      true,
     )
 
     return this as ReturnBuilderWithKeyAgreementMethod<this>
   }
 
   public addAssertionMethod(
-    verificationMethodOrStringOrDid: VerificationMethodOrDidOrString
+    verificationMethodOrStringOrDid: VerificationMethodOrDidOrString,
   ): ReturnBuilderWithAssertionMethod<this> {
     this.assertionMethod = this.addVerificationMethodOrDidOrString(
       'assertionMethod',
       this.assertionMethod,
-      verificationMethodOrStringOrDid
+      verificationMethodOrStringOrDid,
     )
 
     return this as ReturnBuilderWithAssertionMethod<this>
   }
 
   public addAssertionMethodUnsafe(
-    verificationMethodOrStringOrDid: VerificationMethodOrDidOrString
+    verificationMethodOrStringOrDid: VerificationMethodOrDidOrString,
   ): ReturnBuilderWithAssertionMethod<this> {
     this.assertionMethod = this.addVerificationMethodOrDidOrString(
       'assertionMethod',
       this.assertionMethod,
       verificationMethodOrStringOrDid,
-      true
+      true,
     )
 
     return this as ReturnBuilderWithAssertionMethod<this>
   }
 
   public addCapabilityDelegation(
-    verificationMethodOrStringOrDid: VerificationMethodOrDidOrString
+    verificationMethodOrStringOrDid: VerificationMethodOrDidOrString,
   ): ReturnBuilderWithCapabilityDelegation<this> {
     this.capabilityDelegation = this.addVerificationMethodOrDidOrString(
       'capabilityDelegation',
       this.capabilityDelegation,
-      verificationMethodOrStringOrDid
+      verificationMethodOrStringOrDid,
     )
 
     return this as ReturnBuilderWithCapabilityDelegation<this>
   }
 
   public addCapabilityDelegationUnsafe(
-    verificationMethodOrStringOrDid: VerificationMethodOrDidOrString
+    verificationMethodOrStringOrDid: VerificationMethodOrDidOrString,
   ): ReturnBuilderWithCapabilityDelegation<this> {
     this.capabilityDelegation = this.addVerificationMethodOrDidOrString(
       'capabilityDelegation',
       this.capabilityDelegation,
       verificationMethodOrStringOrDid,
-      true
+      true,
     )
 
     return this as ReturnBuilderWithCapabilityDelegation<this>
   }
 
   public addCapabilityInvocation(
-    verificationMethodOrStringOrDid: VerificationMethodOrDidOrString
+    verificationMethodOrStringOrDid: VerificationMethodOrDidOrString,
   ): ReturnBuilderWithCapabilityInvocation<this> {
     this.capabilityInvocation = this.addVerificationMethodOrDidOrString(
       'capabilityInvocation',
       this.capabilityInvocation,
-      verificationMethodOrStringOrDid
+      verificationMethodOrStringOrDid,
     )
 
     return this as ReturnBuilderWithCapabilityInvocation<this>
   }
 
   public addCapabilityInvocationUnsafe(
-    verificationMethodOrStringOrDid: VerificationMethodOrDidOrString
+    verificationMethodOrStringOrDid: VerificationMethodOrDidOrString,
   ): ReturnBuilderWithCapabilityInvocation<this> {
     this.capabilityInvocation = this.addVerificationMethodOrDidOrString(
       'capabilityInvocation',
       this.capabilityInvocation,
       verificationMethodOrStringOrDid,
-      true
+      true,
     )
 
     return this as ReturnBuilderWithCapabilityInvocation<this>
@@ -307,7 +307,7 @@ export class DidDocument {
     fieldName: string,
     previousItem: Array<VerificationMethod | Did> | undefined,
     verificationMethodOrDidOrString: VerificationMethodOrDidOrString,
-    unsafe = false
+    unsafe = false,
   ) {
     let newItem = previousItem
 
@@ -320,7 +320,7 @@ export class DidDocument {
 
     if (id && !unsafe) {
       const verificationMethodIds = this.verificationMethod?.map(
-        (vm) => vm.id.didUrl
+        (vm) => vm.id.didUrl,
       )
       if (
         verificationMethodIds === undefined ||
@@ -331,7 +331,7 @@ export class DidDocument {
             id.didUrl
           }' to '${fieldName}', but it was not found in the verificationMethod. If you want to add it anyways, try 'this.add${
             fieldName.charAt(0).toUpperCase() + fieldName.slice(1)
-          }Unsafe(...)'`
+          }Unsafe(...)'`,
         )
       }
     }
@@ -341,7 +341,7 @@ export class DidDocument {
         ? verificationMethodOrDidOrString instanceof VerificationMethod
           ? verificationMethodOrDidOrString
           : new VerificationMethod(
-              verificationMethodOrDidOrString as VerificationMethodOptions
+              verificationMethodOrDidOrString as VerificationMethodOptions,
             )
         : undefined
 
@@ -354,7 +354,7 @@ export class DidDocument {
       }
     } else {
       throw new DidDocumentError(
-        `Something went wrong while trying to parse verification method for ${fieldName} with item ${verificationMethodOrDidOrString}`
+        `Something went wrong while trying to parse verification method for ${fieldName} with item ${verificationMethodOrDidOrString}`,
       )
     }
 
@@ -365,7 +365,7 @@ export class DidDocument {
 
   public findServiceByType(type: string): Service {
     const service = this.service?.find((s) =>
-      (typeof s.type === 'string' ? [s.type] : s.type).includes(type)
+      (typeof s.type === 'string' ? [s.type] : s.type).includes(type),
     )
 
     if (!service) {
@@ -409,7 +409,7 @@ export class DidDocument {
       | 'assertionMethod'
       | 'capabilityInvocation'
       | 'capabilityDelegation'
-      | 'verificationMethod' = 'verificationMethod'
+      | 'verificationMethod' = 'verificationMethod',
   ): VerificationMethod {
     const field =
       purpose === 'authentication'
@@ -426,19 +426,19 @@ export class DidDocument {
 
     if (!field) {
       throw new DidDocumentError(
-        `Purpose '${purpose}' does not exist inside the did document`
+        `Purpose '${purpose}' does not exist inside the did document`,
       )
     }
 
     const vm = field
       .map((f) =>
-        f instanceof Did ? this.safeFindToVerificationMethodByDidUrl(f) : f
+        f instanceof Did ? this.safeFindToVerificationMethodByDidUrl(f) : f,
       )
       .find((vm) => vm?.type === type)
 
     if (!vm) {
       throw new DidDocumentError(
-        `Purpose '${purpose}' does not have a field with type '${type}'`
+        `Purpose '${purpose}' does not have a field with type '${type}'`,
       )
     }
 
@@ -453,7 +453,7 @@ export class DidDocument {
       | 'assertionMethod'
       | 'capabilityInvocation'
       | 'capabilityDelegation'
-      | 'verificationMethod' = 'verificationMethod'
+      | 'verificationMethod' = 'verificationMethod',
   ): VerificationMethod {
     const field =
       purpose === 'authentication'
@@ -472,19 +472,19 @@ export class DidDocument {
 
     if (!field) {
       throw new DidDocumentError(
-        `Purpose '${purpose}' does not exist inside the did document`
+        `Purpose '${purpose}' does not exist inside the did document`,
       )
     }
 
     const vm = field
       .map((f) =>
-        f instanceof Did ? this.safeFindToVerificationMethodByDidUrl(f) : f
+        f instanceof Did ? this.safeFindToVerificationMethodByDidUrl(f) : f,
       )
       .find((vm) => vm?.id.didUrl === parsedDid.didUrl)
 
     if (!vm) {
       throw new DidDocumentError(
-        `Purpose '${purpose}' does not have a field with did '${did}'`
+        `Purpose '${purpose}' does not have a field with did '${did}'`,
       )
     }
 
@@ -499,7 +499,7 @@ export class DidDocument {
       | 'assertionMethod'
       | 'capabilityInvocation'
       | 'capabilityDelegation'
-      | 'verificationMethod' = 'verificationMethod'
+      | 'verificationMethod' = 'verificationMethod',
   ): VerificationMethod | undefined {
     try {
       return this.findVerificationMethodByDidUrlAndPurpose(did, purpose)
@@ -516,7 +516,7 @@ export class DidDocument {
       | 'assertionMethod'
       | 'capabilityInvocation'
       | 'capabilityDelegation'
-      | 'verificationMethod' = 'verificationMethod'
+      | 'verificationMethod' = 'verificationMethod',
   ): VerificationMethod | undefined {
     try {
       return this.findVerificationMethodByTypeAndPurpose(type, purpose)
@@ -527,7 +527,7 @@ export class DidDocument {
 
   public isVerificationMethodTypeRegistered(
     id: Did | string,
-    additionalAcceptedTypes: string | Array<string> = []
+    additionalAcceptedTypes: string | Array<string> = [],
   ): boolean {
     const vm = this.findVerificationMethodByDidUrl(id)
 
@@ -536,7 +536,7 @@ export class DidDocument {
 
   public isServiceTypeRegistered(
     id: string,
-    additionalAcceptedTypes: string | Array<string> = []
+    additionalAcceptedTypes: string | Array<string> = [],
   ): boolean {
     const service = this.findServiceById(id)
 
@@ -563,17 +563,17 @@ export class DidDocument {
       assertionMethod: this.assertionMethod?.map(mapStringOrVerificationMethod),
       keyAgreement: this.keyAgreement?.map(mapStringOrVerificationMethod),
       capabilityInvocation: this.capabilityInvocation?.map(
-        mapStringOrVerificationMethod
+        mapStringOrVerificationMethod,
       ),
       capabilityDelegation: this.capabilityDelegation?.map(
-        mapStringOrVerificationMethod
+        mapStringOrVerificationMethod,
       ),
       authentication: this.authentication?.map(mapStringOrVerificationMethod),
     }
     const cleanedRest = Object.fromEntries(
       Object.entries(mappedRest)
         .filter(([_, value]) => value !== undefined)
-        .filter(([key]) => !omitKeysWithBase.includes(key))
+        .filter(([key]) => !omitKeysWithBase.includes(key)),
     )
 
     return cleanedRest
