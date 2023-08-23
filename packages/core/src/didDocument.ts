@@ -26,7 +26,9 @@ type VerificationMethodOrDidOrString =
 export type DidDocumentOptions<T extends Record<string, unknown> = {}> = Modify<
     z.input<typeof didDocumentSchema>,
     {
-        verificationMethod?: Array<VerificationMethodOptions>
+        verificationMethod?: Array<
+            VerificationMethodOptions | VerificationMethod
+        >
         authentication?: DidOrVerificationMethodArray
         assertionMethod?: DidOrVerificationMethodArray
         keyAgreement?: DidOrVerificationMethodArray

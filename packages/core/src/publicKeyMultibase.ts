@@ -13,6 +13,6 @@ export class PublicKeyMultibase {
     }
 
     public toJSON() {
-        this.publicKeyMultibase.toString()
+        return this.publicKeyMultibase.toString()
     }
 }

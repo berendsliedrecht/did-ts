@@ -29,6 +29,22 @@ importers:
                 specifier: ^3.22.1
                 version: 3.22.1
 
+    packages/key:
+        dependencies:
+            bs58:
+                specifier: ^5.0.0
+                version: 5.0.0
+            did-core:
+                specifier: workspace:*
+                version: link:../core
+            varint:
+                specifier: ^6.0.0
+                version: 6.0.0
+        devDependencies:
+            '@types/varint':
+                specifier: ^6.0.1
+                version: 6.0.1
+
 packages:
     /@babel/code-frame@7.21.4:
         resolution:
@@ -397,6 +413,15 @@ packages:
             }
         dev: true
 
+    /@types/varint@6.0.1:
+        resolution:
+            {
+                integrity: sha512-fQdOiZpDMBvaEdl12P1x7xlTPRAtd7qUUtVaWgkCy8DC//wCv19nqFFtrnR3y/ac6VFY0UUvYuQqfKzZTSE26w==
+            }
+        dependencies:
+            '@types/node': 18.16.16
+        dev: true
+
     /acorn-walk@8.2.0:
         resolution:
             {
@@ -561,6 +586,13 @@ packages:
             }
         dev: true
 
+    /base-x@4.0.0:
+        resolution:
+            {
+                integrity: sha512-FuwxlW4H5kh37X/oW59pwTzzTKRzfrrQwhmyspRM7swOEZcHtDZSCt45U6oKgtuFE+WYPblePMVIPR4RZrh/hw==
+            }
+        dev: false
+
     /base64-js@1.5.1:
         resolution:
             {
@@ -659,6 +691,15 @@ packages:
         dependencies:
             fill-range: 7.0.1
         dev: true
+
+    /bs58@5.0.0:
+        resolution:
+            {
+                integrity: sha512-r+ihvQJvahgYT50JD05dyJNKlmmSlMoOGwn1lCcEzanPglg7TxYjioQUYehQ9mAR/+hOSd2jRc/Z2y5UxBymvQ==
+            }
+        dependencies:
+            base-x: 4.0.0
+        dev: false
 
     /buffer@5.7.1:
         resolution:
@@ -3812,6 +3853,13 @@ packages:
                 integrity: sha512-wa7YjyUGfNZngI/vtK0UHAN+lgDCxBPCylVXGp0zu59Fz5aiGtNXaq3DhIov063MorB+VfufLh3JlF2KdTK3xg==
             }
         dev: true
+
+    /varint@6.0.0:
+        resolution:
+            {
+                integrity: sha512-cXEIW6cfr15lFv563k4GuVuW/fiwjknytD37jIOLSdSWuOI6WnO/oKwmP2FQTU2l01LP8/M5TSAJpzUaGe3uWg==
+            }
+        dev: false
 
     /wcwidth@1.0.1:
         resolution:

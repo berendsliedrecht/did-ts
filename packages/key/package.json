@@ -1,22 +1,27 @@
 {
-    "name": "did-core",
+    "name": "did-key",
     "version": "0.0.2",
-    "description": "Implementation of did-core v1.0",
+    "description": "Implementation of the did:key method",
     "license": "MIT",
     "author": "Berend Sliedrecht <blu3beri@proton.me>",
     "main": "src/index.ts",
+    "publishConfig": {
+        "main": "build/index.js"
+    },
     "files": [
         "build",
         "../../LICENSE"
     ],
-    "publishConfig": {
-        "main": "build/index.js"
-    },
     "scripts": {
         "release": "release-it",
         "build": "tsc"
     },
     "dependencies": {
-        "zod": "^3.22.1"
+        "bs58": "^5.0.0",
+        "did-core": "workspace:*",
+        "varint": "^6.0.0"
+    },
+    "devDependencies": {
+        "@types/varint": "^6.0.1"
     }
 }

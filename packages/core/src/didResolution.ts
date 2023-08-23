@@ -1,5 +1,6 @@
 import { Impossible, OrPromise } from './types'
-import { DidDocumentOptions } from './didDocument'
+import { DidDocument, DidDocumentOptions } from './didDocument'
+import { Did } from './did'
 
 export type ResolutionOptions<T extends Record<string, unknown>> = {
     accept: string
@@ -22,6 +23,36 @@ export type DidDocumentMetadata<T extends Record<string, unknown>> = {
     canonicalId?: string
 } & T
 
+export type DidResolutionResolveOptions<
+    AdditionalOptions extends Record<string, unknown> = {}
+> = Impossible<ResolutionOptions<AdditionalOptions>, 'accept'>
+
+export type DidResolutionResolveResult<
+    AdditionalDidResolutionMetadata extends Record<string, unknown> = {},
+    AdditionalDidDocument extends Record<string, unknown> = {},
+    AdditionalDidDocumentMetadata extends Record<string, unknown> = {}
+> = OrPromise<{
+    didDocument: DidDocumentOptions<AdditionalDidDocument> | DidDocument
+    didResolutionMetadata: Impossible<
+        DidResolutionMetadata<AdditionalDidResolutionMetadata>,
+        'contentType'
+    >
+    didDocumentMetadata: DidDocumentMetadata<AdditionalDidDocumentMetadata>
+}>
+
+export type DidResolutionResolvePresentationOptions<
+    AdditionalOptions extends Record<string, unknown> = {}
+> = ResolutionOptions<AdditionalOptions>
+
+export type DidResolutionResolvePresentationResult<
+    AdditionalDidResolutionMetadata extends Record<string, unknown> = {},
+    AdditionalDidDocumentMetadata extends Record<string, unknown> = {}
+> = OrPromise<{
+    didResolutionMetadata: DidResolutionMetadata<AdditionalDidResolutionMetadata>
+    didDocumentStream: Uint8Array
+    didDocumentMetadata: DidDocumentMetadata<AdditionalDidDocumentMetadata>
+}>
+
 export interface DidResolution<
     AdditionalOptions extends Record<string, unknown> = {},
     AdditionalDidResolutionMetadata extends Record<string, unknown> = {},
@@ -30,25 +61,29 @@ export interface DidResolution<
 > {
     resolve(
         did: string,
-        resolutionOptions?: Impossible<
-            ResolutionOptions<AdditionalOptions>,
-            'accept'
-        >
-    ): OrPromise<{
-        didResolutionMetadata: Impossible<
-            DidResolutionMetadata<AdditionalDidResolutionMetadata>,
-            'contentType'
-        >
-        didDocument: DidDocumentOptions<AdditionalDidDocument>
-        didDocumentMetadata: DidDocumentMetadata<AdditionalDidDocumentMetadata>
-    }>
+        resolutionOptions?: DidResolutionResolveOptions<AdditionalOptions>
+    ): DidResolutionResolveResult<
+        AdditionalDidResolutionMetadata,
+        AdditionalDidDocument,
+        AdditionalDidDocumentMetadata
+    >
 
     resolvePresentation(
         did: string,
-        resolutionOptions?: ResolutionOptions<AdditionalOptions>
-    ): OrPromise<{
-        didResolutionMetadata: DidResolutionMetadata<AdditionalDidResolutionMetadata>
-        didDocumentStream: Uint8Array
-        didDocumentMetadata: DidDocumentMetadata<AdditionalDidDocumentMetadata>
-    }>
+        resolutionOptions?: DidResolutionResolvePresentationOptions
+    ): DidResolutionResolvePresentationResult<
+        AdditionalDidResolutionMetadata,
+        AdditionalDidDocumentMetadata
+    >
+}
+
+export type DidRegistrationRegisterResult = {
+    did: Did
+    didDocument: DidDocument
+}
+
+export interface DidRegistration<
+    DidRegistrationOptions extends Record<string, unknown> = {}
+> {
+    register(options: DidRegistrationOptions): DidRegistrationRegisterResult
 }

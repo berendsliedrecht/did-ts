@@ -214,5 +214,8 @@ export enum VerificationMethodTypes {
      *    }]
      * }
      */
-    VerifiableCondition2021 = 'VerifiableCondition2021'
+    VerifiableCondition2021 = 'VerifiableCondition2021',
+
+    Ed25519VerificationKey2020 = 'Ed25519VerificationKey2020',
+    MultiKey = 'MultiKey'
 }
