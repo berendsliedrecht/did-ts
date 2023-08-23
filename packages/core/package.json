@@ -1,0 +1,19 @@
+{
+    "name": "did-core",
+    "version": "0.0.1",
+    "description": "Implementation of did-core v1.0",
+    "license": "MIT",
+    "author": "Berend Sliedrecht <blu3beri@proton.me>",
+    "main": "build/index.js",
+    "files": [
+        "build",
+        "../../LICENSE"
+    ],
+    "scripts": {
+        "release": "release-it",
+        "build": "tsc"
+    },
+    "dependencies": {
+        "zod": "^3.22.1"
+    }
+}
